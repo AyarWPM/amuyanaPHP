@@ -1,0 +1,327 @@
+/* APP */
+*{
+  margin:0;
+  padding: 0;
+  white-space: nowrap;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+body {
+  background-color: #cccccc;
+
+}
+
+.stage{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width:100%;
+  flex-wrap: nowrap; // doesnt seem to do anything useful
+}
+
+.header {
+
+}
+
+/* .contents{
+  flex:1;
+} */
+
+.home {
+  flex:1;
+  /* height:100px; */
+}
+
+.footer {
+  flex:1;
+  border:1px solid black;
+  height:30px;
+  max-height: 30px;
+}
+/* .panel {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+} */
+
+.menu{
+  display:flex;
+
+  background-color: #293241;
+}
+
+img#logo{
+  display:block;
+  max-width: 90px;
+  max-height:auto;
+  /* max-height:55px; */
+
+  width:auto;
+  height:auto;
+  max-height: auto;
+  margin:0 10px 0 10px;
+  filter: invert(86%) sepia(4%) saturate(3887%) hue-rotate(173deg) brightness(90%) contrast(89%);
+}
+
+/* MENU */
+
+ .menu ul.menuList{
+  list-style-type: none;
+  margin: 0;
+  padding:0;
+  overflow:hidden;
+  top:0;
+
+}
+
+.menu li.menuItem {
+  float: left;
+  list-style-type: none;
+}
+
+.menu li.menuItem a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  height: 100%;
+}
+.menu li.menuItem .activeMenu{
+  color:#111;
+  background-color: #ee6c4d;
+}
+
+.menu li.menuItem a:hover {
+  color:#ee6c4d;
+  background-color: #3d5a80;
+}
+
+/* SYSTEM */
+.systems{
+  flex:1;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.systems > *{
+  padding:10px;
+}
+
+.systems > .systemsList {
+  flex:1 1 200px;
+  border:1px solid black;
+}
+
+.systemsItem{
+
+}
+
+.systems > .systemsData{
+  flex:1 1 70%;
+  border:1px solid black;
+}
+
+/* TABLES */
+
+.tables{
+  flex:1;
+  display:flex;
+  flex-direction: column;
+  flex-wrap:nowrap;
+  box-sizing: content-box;
+}
+
+.canvas{
+  display:flex;
+  flex-shrink: 1;
+  flex-grow: 0;
+  background-color: lightblue;
+  height:100%;
+  overflow: scroll;
+  box-sizing: content-box;
+
+}
+
+.tree{
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  /* border:2px dotted black; */
+  box-sizing: content-box;
+
+
+}
+
+.trunk{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  /* border: 1px solid black; */
+  flex-grow: 0;
+  flex-shrink: 1;
+  box-sizing: content-box;
+
+}
+
+.rootTrunk{
+
+}
+
+.leftTrunk{
+  /* flex-shrink: 0; */
+}
+
+.rightTrunk{
+/* flex-shrink: 0; */
+}
+
+.branch{
+  display:flex;
+  /* flex-shrink: 0; */
+  /* border: 1px solid red; */
+  /* border-radius: 50px; */
+  padding: 5px;
+  /* background-color: rgba(158, 100, 84, 0.29); */
+}
+
+.subBranchContainer{
+  display:flex;
+  /* flex-shrink: 0; */
+  justify-content: center;
+  flex-direction: column;
+  /* border: 1px solid lime; */
+
+}
+
+.subBranch{
+  display:flex;
+  /* flex-shrink: 0; */
+  align-items: center;
+  justify-content: center;
+  /* border: 2px solid green; */
+}
+
+.fruitContainer{
+  display: flex;
+  /* flex-shrink: 0; */
+}
+
+.fruit{
+  display:grid;
+  grid-template-columns: auto minmax(30px,auto) 20px;
+  grid-template-rows: minmax(40px,autos);
+  grid-template-areas:
+  ". fruitHeader ."
+  "fruitBracket fruitFormulation fruitConnector"
+  "fruitBracket fruitFormulation fruitConnector"
+  "fruitBracket fruitFormulation fruitConnector";
+  /* border: 2px solid blue; */
+
+}
+
+.fruitHeader{
+  grid-area:fruitHeader;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.fruitFormulation{
+  grid-area:fruitFormulation;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.formulation{
+  flex-grow: 1;
+  display:flex;
+  flex-shrink: 0;
+  justify-content: left;
+  align-items: center;
+}
+
+.fruitBracket{
+  grid-area: fruitBracket;
+  padding-right:5px;
+}
+
+.fruitBracket img{
+  max-width: 20px;
+  height:auto;
+}
+
+.fruitConnector{
+  grid-area: fruitConnector;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.connector{
+  flex-grow: 1;
+  display:flex;
+  justify-content: right;
+  align-items: center;
+}
+
+/* DUALITIES */
+.dualities{
+  flex:1;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.dualities > *{
+  padding:10px;
+}
+
+.dualities > .dualitiesData{
+  flex:1 1 70%;
+  border:1px solid black;
+}
+
+.dualitiesData > * {
+  padding:5px;
+}
+
+.dualities > .dualitiesList {
+  flex:1 1 200px;
+  border:1px solid black;
+}
+
+.dualitiesItem{
+
+}
+
+.formulation{
+  display: flex;
+
+}
+
+.element{
+  margin:0 1 0 5px;
+}
+
+.bar{
+  border-width: 1 0 0 0;
+  border-style:solid;
+  border-color:black;
+  font-size:110%;
+}
+
+.index{
+  position:relative;
+  top:6px;
+  padding: 0 2 0 1;
+  font-size: 100%;
+}
