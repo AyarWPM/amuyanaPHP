@@ -2,7 +2,7 @@
 
 # AmuyañaPHP
 
-This is the source code of the web version for the [Amuyaña](https://github.com/AyarWPM/amuyana) project which is written in Java and JavaFX.
+AmuyañaPHP is the web version for the [Amuyaña](https://github.com/AyarWPM/amuyana) project which is written in Java and JavaFX.
 
 ## Live version
 
