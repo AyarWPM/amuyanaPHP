@@ -39,7 +39,27 @@
     <div class="canvas">
       <?php
         getTree($id_container_0);
+
+        $dynArrayEncoded = json_encode($dynArray);
+        echo '<div id="dynamismsArrayDiv" style="display:none;">'.$dynArrayEncoded.'</div>';
+
+        // get data of inclusions, encode
+        $sql = "SELECT id_particular, id_general FROM tbl_inclusion
+        WHERE id_tod= $currentTable;";
+        $result = mysqli_query($conn,$sql);
+        $datas=array();
+        if(mysqli_num_rows($result) > 0){
+          while($row=mysqli_fetch_assoc($result)){
+            $datas[] = $row;
+          }
+        }
+        $inclusionsArrayEncoded = json_encode($datas);
+        echo '<div id="inclusionsArrayDiv" style="display:none;">'.$inclusionsArrayEncoded.'</div>';
       ?>
+      <script>
+        listDynamisms = JSON.parse(document.getElementById('dynamismsArrayDiv').innerHTML);
+        listInclusions = JSON.parse(document.getElementById('inclusionsArrayDiv').innerHTML);
+      </script>
     </div>
   </div>
 <?php include 'includes/footer.php'?>

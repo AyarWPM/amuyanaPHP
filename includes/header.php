@@ -9,10 +9,17 @@
 <title>Amuya&ntilde;a - Contradictory logic systems</title>
 <link rel="stylesheet" type="text/css" href="style.css">
 <script>
-function myFunction(){
-  log("test");
+function saveText(type,sql_id,html_id){
+  var xr = new XMLHttpRequest();
+  var url = "saveData.php";
+  var text = document.getElementById(html_id).innerHTML;
+  var vars = "type="+type+"&id="+id+"&text="+text;
+  xr.open ("POST", url, true);
+  xr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xr.send(vars);
 }
 </script>
+<script src="inclusions.js"></script>
 </head>
 <body>
   <div class="stage">
