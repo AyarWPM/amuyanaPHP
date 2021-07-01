@@ -1,4 +1,6 @@
 <?php
+  error_reporting(E_ALL);
+  ini_set('display_errors', 1);
   $theHost=1; // 0 = localhost , 1 = amuyana.net
   include_once 'includes/dbh.inc.php';
   include_once 'code.php';
@@ -8,6 +10,7 @@
 <head>
 <title>Amuya&ntilde;a - Contradictory logic systems</title>
 <link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="includes/jquery-ui-1.12.1.custom/jquery-ui.css">
 <script>
 function saveText(type,sql_id,html_id){
   var xr = new XMLHttpRequest();
@@ -19,7 +22,11 @@ function saveText(type,sql_id,html_id){
   xr.send(vars);
 }
 </script>
+<script src="jquery-3.6.0.js"></script>
+<script src="includes/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 <script src="inclusions.js"></script>
+<script src="dualities.js"></script>
+
 </head>
 <body>
   <div class="stage">

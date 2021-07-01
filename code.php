@@ -1,26 +1,25 @@
 <?php
-  $dynArray = array();
-  $message = "hi there";
+  // was in code.php
 
   function getTree($id_container_0){
     echo '<div id="tree" class="tree">';
-    // echo '<svg class="line" width="500" height="500"><line x1="50" y1="50" x2="350" y2="350" stroke="black"/></svg>';
     getTrunk($id_container_0,0);
     echo '</div>';
   }
 // side=-1,0,1 respectively left trunk, root Trunk and right trunk
   function getTrunk($id_container_0, $side){
-    // if $side=-1 echo '<div class="trunk ">';
+    global $container0sAggregated;
+    global $container0sArrayEncoded;
+    $container0sAggregated[] = $id_container_0;
+    $container0sArrayEncoded = json_encode($container0sAggregated);
     echo ($side==-1) ? '<div class="trunk leftTrunk">' : (($side==0) ? '<div class="trunk rootTrunk">' : (($side==1) ? '<div class="trunk rightTrunk">' : ''));
-    // if($side==-1){echo 'side -1';}
-    // if($side==0){echo 'side 0';}
-    // if($side==1){echo 'side 1';}
-
+    
     global $conn;
-    $sql = "SELECT id_container_1, branch_order
-    FROM tbl_container_1 WHERE id_container_0=".$id_container_0." ORDER BY branch_order;";
+    $sql = "SELECT id_container_1, branch_order 
+    FROM tbl_container_1 WHERE id_container_0='".$id_container_0."' ORDER BY branch_order;";
     $result = mysqli_query($conn,$sql);
     $datas=array();
+    
     $isResult = false;
     if(mysqli_num_rows($result) > 0){
       $isResult = true;
@@ -28,20 +27,24 @@
         $datas[] = $row;
       }
     }
+
+    global $container1sAggregated;
+    global $container1sArrayEncoded;
     // for now only one branch per trunk, so there's only going to be one result
     if($isResult){
       foreach($datas as $data){
+        $container1sAggregated[] = $data["id_container_1"];
+        // array_merge($container1sAggregated,$data['id_container_1']);
+        $container1sArrayEncoded = json_encode($container1sAggregated);
         getBranch($data['id_container_1']);
       }
-    } else {
-      echo ($side==0) ? 'This table is empty' : '';
     }
     echo '</div>';
   }
 
   function getBranch($id_branch){
-    echo '<div class="branch">';
-    // echo 'branch '.$id_branch;
+    $id_branch_div = "branch".$id_branch;
+    echo '<div onmouseover="mouseOverBranch(this.id)" onmouseleave="mouseLeaveBranch(this.id)" class="branch" id="'.$id_branch_div.'">';
     //checking left and right trunks
     global $conn;
     $sqlLeft = 'SELECT tbl_container_0.id_container_0 FROM tbl_container_0
@@ -61,12 +64,10 @@
       foreach($datas as $data){
         getTrunk($data['id_container_0'],-1);
       }
-    } else {
-      // add empty div for styling
-      echo 'this part of the code has been used 0';
-      echo '<div class="trunk">nodata</div>';
     }
 
+    global $container2sAggregated;
+    global $container2sArrayEncoded;
     echo '<div class="subBranchContainer">';
         // echo all subBranches
         // forall
@@ -84,7 +85,9 @@
         }
         if($isResult){
           foreach($datas as $data){
-
+            $container2sAggregated[] = $data["id_container_2"];
+            // array_merge($container1sAggregated,$data['id_container_1']);
+            $container2sArrayEncoded = json_encode($container2sAggregated);
             getSubbranch($data['id_container_2'],$data['id_fcc']);
           }
         }
@@ -107,14 +110,22 @@
       foreach($datas as $data){
         getTrunk($data['id_container_0'],1);
       }
-    } else {
-      // add empty div for styling
-      echo 'this part of the code has been used 0';
-      echo '<div class="trunk">nodata</div>';
     }
-
     echo '</div>';
+    $id_addInBranchButton_div = "addInBranchButton".$id_branch;
+    echo '<div id="'.$id_addInBranchButton_div.'" class="addInBranchButton" onmouseover="mouseOverAddInBranchButton(this.id)" 
+    onmouseleave="mouseLeaveAddInBranchButton(this.id)" onclick="openMenuAddDualityInBranch(this.id)">'; 
+    echo '<div>&#10133;</div>';
+    $id_menuAddDualityContent_div = "menuAddDualityContent".$id_branch;
+    echo '<div id="'.$id_menuAddDualityContent_div.'">';
+    echo '</div>';
+    echo '</div>';
+  
+    // load script
+    global $currentTable;
+    echo '<script>loadMenuAddInBranch('.$currentTable.', '.$id_branch.')</script>';
   }
+
 
   function getSubbranch($id_subBranch, $id_fcc){
     echo '<div class="subBranch">';
@@ -144,8 +155,8 @@
       }
     } else {
       // add empty div for styling
-      echo 'this part of the code has been used 0';
-      echo '<div class="trunk">nodata</div>';
+      // echo 'this part of the code has been used 0';
+      // echo '<div class="trunk">nodata</div>';
     }
 
     echo '<div class="fruitContainer">';
@@ -168,9 +179,10 @@
       }
     } else {
       // add empty div for styling
-      echo 'this part of the code has been used 0';
-      echo '<div class="trunk">nodata</div>';
+      // echo 'this part of the code has been used 0';
+      // echo '<div class="trunk">nodata</div>';
     }
+    
     echo '</div>';
   }
 
@@ -237,7 +249,7 @@
     $descriptionSymmetric="";
     $id_symmetric=0;
     // POSITIVE
-    $sql = "SELECT id_dynamism, proposition FROM tbl_dynamism
+    $sql = "SELECT id_dynamism, proposition, description FROM tbl_dynamism
     WHERE tbl_dynamism.id_fcc=".$id_fcc." AND tbl_dynamism.orientation=0;";
     $result = mysqli_query($conn,$sql);
     $datas=array();
@@ -290,22 +302,25 @@
     echo '<div class="fruit">';
     echo '<div class="fruitHeader">';
     // By convention, id = type [name,positive,...]+id_fcc
-    echo '<div id="dual'.$id_fcc.'" title="'.$description.'" class="fruitName" contenteditable="true">'.$name.'</div><div class="formulation"> ('.$element.'&middot;'.$antiElement.')</div>';
+    global $currentTable;
+    echo '<div id="dual'.$id_fcc.'" onclick="editDuality(this.id ,'.$id_subBranch.', '.$currentTable.')" class="fruitName">'.$name.'</div><div class="formulation"> ('.$element.'&middot;'.$antiElement.')</div>';
     echo '</div>';
     echo '<div class="fruitBracket">';
-    echo '<img src="/includes/bracket.png" alt="bracket">';
+    echo '<img src="includes/bracket.png" alt="bracket">';
     echo '</div>';
     echo '<div class="fruitFormulation">';
-    echo '<div onmouseover="mouseOver(this.id)" title="'.$descriptionPositive.'" onmouseleave="mouseLeave()" id="'.$id_positive.'" class="proposition">'.$positive.'</div>';
-    echo '<div onmouseover="mouseOver(this.id)" title="'.$descriptionNegative.'" onmouseleave="mouseLeave()" id="'.$id_negative.'" class="proposition">'.$negative.'</div>';
-    echo '<div onmouseover="mouseOver(this.id)" title="'.$descriptionSymmetric.'" onmouseleave="mouseLeave()" id="'.$id_symmetric.'" class="proposition">'.$symmetric.'</div>';
+    echo '<div onmouseover="mouseOverDynamism(this.id)" title="'.$descriptionPositive.'" onmouseleave="mouseLeaveDynamism()" id="'.$id_positive.'" class="proposition">'.$positive.'</div>';
+    echo '<div onmouseover="mouseOverDynamism(this.id)" title="'.$descriptionNegative.'" onmouseleave="mouseLeaveDynamism()" id="'.$id_negative.'" class="proposition">'.$negative.'</div>';
+    echo '<div onmouseover="mouseOverDynamism(this.id)" title="'.$descriptionSymmetric.'" onmouseleave="mouseLeaveDynamism()" id="'.$id_symmetric.'" class="proposition">'.$symmetric.'</div>';
     echo '</div>';
     echo '<div class="fruitConnector">';
-    echo '<div class="connector"></div>';
-    echo '<div class="connector"></div>';
-    echo '<div class="connector"></div>';
+    // echo '<div class="connector"></div>';
+    // echo '<div class="connector"></div>';
+    // echo '<div class="connector"></div>';
     echo '</div>';
-    echo '</div>';;
+    echo '</div>';
   }
-
+  //  function refresh(){
+  //   header("refresh:2; url=tables.php?id=".$table."&option=Open");
+  //  }
 ?>
