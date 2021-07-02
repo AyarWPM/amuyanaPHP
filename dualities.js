@@ -12,7 +12,6 @@ function closeDualityEditor(){
   $("#dualityEditor").hide();
 }
 
-
 function removeDuality(currentTable, idFcc, idContainer2){
   var t = currentTable;
   var f = idFcc;

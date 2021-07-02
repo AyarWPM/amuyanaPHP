@@ -3,7 +3,7 @@
   $table = $_POST['table'];
   $container1Id = $_POST['container1Id'];
   $duality = $_POST['duality'];
-  echo "<script>alert(".$duality.")<script>";
+
   if(empty($duality)){
     $newId;
     $fccName = "New Duality ";
@@ -176,8 +176,8 @@
   if(!mysqli_query($conn,$sqlTodFcc)){
     echo "mysql error 2.";
   }
-  
   $url ="tables.php?id=".$table."&option=Open";
-  header("refresh:0; url=$url");
-  exit();
+  echo '<script>location.replace("'.$url.'");</script>';
+  // header("refresh:1; url=$url");
+  // exit();
 ?>

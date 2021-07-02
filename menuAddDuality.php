@@ -4,12 +4,12 @@
   $container1Id = $_POST['container1Id'];
   $selectorId = "selector".$container1Id;
 
- 
-  echo '<div class="selectorAddDuality" id="'.$selectorId.'" style="visibility:hidden;">';
+  echo '<div id="'.$selectorId.'" style="visibility:hidden;">';
+  
   echo '<form action="addDuality.php" method="post">';
   echo '<input type="text" hidden="true" value="'.$container1Id.'" name="container1Id">';
   echo '<input type="text" hidden="true" value="'.$table.'" name="table">';
-  echo '<select name="duality">';
+  echo '<select  class="selectorAddDuality"   name="duality">';
   echo '<option value="" name="newDuality">New duality</option>';
   $name = "";
   $description = "";
@@ -28,8 +28,9 @@
           }
     }
   }
+  echo '</select>';
+  echo '<input class="selectorAddDualityBtn" type="submit" value="Add">';
+  echo '</form>';
+  
+  echo '</div>';
 ?>
-</select>
-<input class="selectorAddDualityBtn" type="submit" value="Add">
-</form>
-</div>

@@ -331,7 +331,7 @@ if(!$result){
       if(!$condition5a || !$condition5b){
         // there's one inclusion, abort.
         $condition5 = false;
-        echo "condition5 = false : There are inclusions.<br>";
+        echo "Cannot remove the duality because there are inclusions associated.<br>";
         refresh(5);
       } else if($condition5a && $condition5b){
         // remove

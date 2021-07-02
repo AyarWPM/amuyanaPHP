@@ -129,6 +129,7 @@ function getBranch(dynDiv){
 function getTrunk(dynDiv){
   return dynDiv.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
 }
+
 function mouseOverDynamism(hoverId){
   mouseLeaveDynamism();
   var id = hoverId.split("dyn").pop();
@@ -205,7 +206,7 @@ function mouseLeaveBranch(branchId){
   var id = branchId.split("branch").pop();
   var addInBranchId = "addInBranchButton"+id;
   var addInBranchDiv = document.getElementById(addInBranchId);
-  addInBranchDiv.setAttribute("style","opacity:0;");
+  addInBranchDiv.setAttribute("style", "transition:visibility 0.5s linear,opacity 0.5s linear;"); 
 
 }
 
@@ -213,28 +214,29 @@ function mouseOverAddInBranchButton(buttonId){
   var id = buttonId.split("addInBranchButton").pop();
   branchId = "branch"+id;
   var branchDiv = document.getElementById(branchId);
-  branchDiv.setAttribute("style","border-color:rgba(255, 0, 0, 1);border-width:2px;");
+  branchDiv.setAttribute("style","box-shadow: 3px 3px red; border-style:dashed; border-color:rgba(255, 0, 0, 1);border-width:2px;");
   //
   var buttonDiv = document.getElementById(buttonId);
   buttonDiv.setAttribute("style", "opacity:1;background-color:lightgrey;z-index:9999;");
 //
   var selectorId = "selector"+id;
   var selectorDiv = document.getElementById(selectorId);
-  selectorDiv.setAttribute("style", "visibility:visible;overflow:visible;");
+  selectorDiv.setAttribute("style", "visibility:visible;");
 }
 
 function mouseLeaveAddInBranchButton(buttonId){
   var buttonDiv = document.getElementById(buttonId);
-  buttonDiv.setAttribute("style", "opacity:0;");
+  buttonDiv.setAttribute("style", "visibility:hidden;transition:visibility 0.5s linear,opacity 0.5s linear;"); 
 //
   var id = buttonId.split("addInBranchButton").pop();
   var branchId = "branch"+id;
+  
   var branchDiv = document.getElementById(branchId);
-  branchDiv.setAttribute("style", "border-color:rgba(255, 0, 0, 0);border-width:2px;");
+  branchDiv.setAttribute("style", "box-shadow: 3px 3px black; border-style:solid; border-color:rgba(0, 0, 0, 1);border-width:2px;");
 //
   var selectorId = "selector"+id;
   var selectorDiv = document.getElementById(selectorId);
-  selectorDiv.setAttribute("style", "visibility:hidden;");  
+  selectorDiv.setAttribute("style", "visibility:hidden; transition:visibility 0.5s linear,opacity 0.5s linear;"); 
 }
 
 function loadMenuAddInBranch(table, container1){

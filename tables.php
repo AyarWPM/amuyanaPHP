@@ -34,7 +34,7 @@ include 'includes/header.php';
         getCanvas();
       } else {
         echo '<div class="canvas" id="canvas">';
-        echo "Select a table from the list or create a new one.";
+        echo '<div class="message">Select a table from the list or create a new one.</div>';
         echo '</div>';
       }
     } else if ($option=="New"){
@@ -48,7 +48,7 @@ include 'includes/header.php';
         exit();
       } else {
         echo '<div class="canvas" id="canvas">';
-        echo "Select a table from the list.";
+        echo '<div class="message">Select a table from the list.</div>';
         echo '</div>';
       }
     }
