@@ -52,7 +52,7 @@
 ?>
 
 <div class="dualityEditor-header"></div>
-<form id="updateForm" action="updateDuality.php" method="post">
+<form id="updateForm<?php echo $id_fcc?>" action="updateDuality.php" method="post">
     <table class="dualityEditor-table">
     <input type="text" hidden="true" value="<?php echo $table?>" name="table">
         <colgroup>
@@ -113,7 +113,7 @@
         </tr>
     </table>
     </form>
-    <form id="deleteForm" action="removeDuality.php" method="post">
+    <form id="deleteForm<?php echo $id_fcc ?>" action="removeDuality.php" method="post">
     <?php
         echo '<input type="text" hidden="true" value="'.$table.'" name="table">';
         echo '<input type="text" hidden="true" value="'.$id_fcc.'" name="id_fcc">';
@@ -121,14 +121,17 @@
     ?>
     </form>
     <div class="dualityEditor-button-holder">
-        <input form="updateForm" type="submit" class="dualityEditor-button" value="Save">
+
+        <input form="updateForm<?php echo $id_fcc ?>" type="submit" class="dualityEditor-button" value="Save">
         <button type="button" class="dualityEditor-button" onclick="closeDualityEditor()">Close</button>
         <button type="button" id="deleteDualityBtn" class="dualityEditor-button" onclick="confirmDelete()">Delete</button>
         <div id="confirmDeleteDuality">
             Are you sure you want to remove this duality?<br>
             (It will remain in the database for later reuse)<br>
-            <input form="deleteForm" type="submit" class="dualityEditor-button" value="Delete">
-            <button type="button" class="dualityEditor-button" onclick="cancelDelete()">Cancel</button>
+
+            <input form="deleteForm<?php echo $id_fcc ?>" type="submit" class="dualityEditor-button" value="Delete">
+
+            <button type="button<?php echo $id_fcc?>" class="dualityEditor-button" onclick="cancelDelete()">Cancel</button>
         </div>
     </div>
     

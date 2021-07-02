@@ -6,11 +6,6 @@
   $sqlDC2 = $_POST['sqlDeleteContainer2s'];
   $sqlDC0i1 = $_POST['sqlDeleteContainer0in1s'];
   $sqlDC0i2 = $_POST['sqlDeleteContainer0in2s'];
-// delete inclusions
-  // $sqlDeleteInclusions = "DELETE FROM tbl_inclusion WHERE tbl_inclusion.id_tod = '".$todId."';";
-  // if(!mysqli_query($conn,$sqlDeleteInclusions)){
-  //   echo "Error deleting inclusions";
-  // } 
 
   // delete container0in1
   if(!empty($sqlDC0i1)){
@@ -48,12 +43,5 @@
   if(!mysqli_query($conn,$sqlDC0)){
     echo "Error deleting c0.<br>";
   }
-  // delete tod
-
-  // refresh
-
-  // header( "refresh:2; url=tables.php" );
-  // exit();
-  //header("Location:http://localhost/app/tables.php");
   
   ?>

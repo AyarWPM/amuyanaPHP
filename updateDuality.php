@@ -2,10 +2,6 @@
   include('includes/dbh.inc.php');
   $table = $_POST['table'];
   $id_fcc = $_POST['id_fcc'];
-  // $container_2 = $_POST['c2'];
-  // $option = $_POST['optionDualityEditor'];
-
-  // if option = "Save"
   $name = $_POST['fccName'];
   $description = $_POST['fccDescription'];
 

@@ -166,11 +166,8 @@ ob_start(); // to make header work
 
       echo '<script>setLists()</script>';
     }
-    
     echo '</div>'; // canvas
   }
-
-
 ?>
   </div>  <!-- table-->
 <?php include 'includes/footer.php'?>

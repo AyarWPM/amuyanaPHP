@@ -1,6 +1,4 @@
 <?php
-  // was in code.php
-
   function getTree($id_container_0){
     echo '<div id="tree" class="tree">';
     getTrunk($id_container_0,0);
@@ -114,7 +112,7 @@
     echo '</div>';
     $id_addInBranchButton_div = "addInBranchButton".$id_branch;
     echo '<div id="'.$id_addInBranchButton_div.'" class="addInBranchButton" onmouseover="mouseOverAddInBranchButton(this.id)" 
-    onmouseleave="mouseLeaveAddInBranchButton(this.id)" onclick="openMenuAddDualityInBranch(this.id)">'; 
+    onmouseleave="mouseLeaveAddInBranchButton(this.id)">'; 
     echo '<div>&#10133;</div>';
     $id_menuAddDualityContent_div = "menuAddDualityContent".$id_branch;
     echo '<div id="'.$id_menuAddDualityContent_div.'">';
@@ -153,17 +151,10 @@
       foreach($datas as $data){
         getTrunk($data['id_container_0'],-1);
       }
-    } else {
-      // add empty div for styling
-      // echo 'this part of the code has been used 0';
-      // echo '<div class="trunk">nodata</div>';
     }
-
     echo '<div class="fruitContainer">';
-
     getFruit($id_fcc,$id_subBranch);
     echo '</div>';
-
     $result = mysqli_query($conn,$sqlRight);
     $datas=array();
     $isResult = false;
@@ -177,24 +168,12 @@
       foreach($datas as $data){
         getTrunk($data['id_container_0'],1);
       }
-    } else {
-      // add empty div for styling
-      // echo 'this part of the code has been used 0';
-      // echo '<div class="trunk">nodata</div>';
     }
-    
     echo '</div>';
   }
 
   function getFruit($id_fcc,$id_subBranch){
     global $conn;
-    // Fruit menu
-    // echo '<div class="fruitMenu">
-    // <div class="fruitMenuItem">&#9998;</div>
-    // <div class="fruitMenuItem">A</div>
-    // </div>';
-    // Fruit content
-
     // ELEMENT AND ANTI-ELEMENT
     $element = "";
     $antiElement ="";
@@ -241,13 +220,13 @@
     global $dynArray;
     $positive="";
     $descriptionPositive="";
-    $id_positive=0;
+    $divIdPositiveDyn;
     $negative="";
     $descriptionNegative="";
-    $id_negative=0;
+    $divIdNegativeDyn;
     $symmetric="";
     $descriptionSymmetric="";
-    $id_symmetric=0;
+    $divIdSymmetricDyn;
     // POSITIVE
     $sql = "SELECT id_dynamism, proposition, description FROM tbl_dynamism
     WHERE tbl_dynamism.id_fcc=".$id_fcc." AND tbl_dynamism.orientation=0;";
@@ -260,8 +239,8 @@
         $positive=$row['proposition'];
         $descriptionPositive=$row['description'];
         $id=$row['id_dynamism'];
-        $id_positive='sub'.$id_subBranch.'dyn'.$id; // we'll store with the format 'sub###dyn###'
-        $dynArray[]=$id_positive; // add the id to the global array
+        $divIdPositiveDyn='sub'.$id_subBranch.'dyn'.$id; // we'll store with the format 'sub###dyn###'
+        $dynArray[]=$divIdPositiveDyn; // add the id to the global array
       }
     }
 
@@ -277,8 +256,8 @@
         $negative=$row['proposition'];
         $descriptionNegative=$row['description'];
         $id=$row['id_dynamism'];
-        $id_negative='sub'.$id_subBranch.'dyn'.$id; // we'll store with the format 'sub###dyn###'
-        $dynArray[]=$id_negative; // add the id to the global array
+        $divIdNegativeDyn='sub'.$id_subBranch.'dyn'.$id; // we'll store with the format 'sub###dyn###'
+        $dynArray[]=$divIdNegativeDyn; // add the id to the global array
       }
     }
 
@@ -294,8 +273,8 @@
         $symmetric=$row['proposition'];
         $id=$row['id_dynamism'];
         $descriptionSymmetric=$row['description'];
-        $id_symmetric='sub'.$id_subBranch.'dyn'.$id; // we'll store with the format 'sub###dyn###'
-        $dynArray[]=$id_symmetric; // add the id to the global array
+        $divIdSymmetricDyn='sub'.$id_subBranch.'dyn'.$id; // we'll store with the format 'sub###dyn###'
+        $dynArray[]=$divIdSymmetricDyn; // add the id to the global array
       }
     }
 
@@ -309,18 +288,15 @@
     echo '<img src="includes/bracket.png" alt="bracket">';
     echo '</div>';
     echo '<div class="fruitFormulation">';
-    echo '<div onmouseover="mouseOverDynamism(this.id)" title="'.$descriptionPositive.'" onmouseleave="mouseLeaveDynamism()" id="'.$id_positive.'" class="proposition">'.$positive.'</div>';
-    echo '<div onmouseover="mouseOverDynamism(this.id)" title="'.$descriptionNegative.'" onmouseleave="mouseLeaveDynamism()" id="'.$id_negative.'" class="proposition">'.$negative.'</div>';
-    echo '<div onmouseover="mouseOverDynamism(this.id)" title="'.$descriptionSymmetric.'" onmouseleave="mouseLeaveDynamism()" id="'.$id_symmetric.'" class="proposition">'.$symmetric.'</div>';
+    echo '<div id="'.$divIdPositiveDyn.'" onmouseover="mouseOverDynamism(this.id)" title="'.$descriptionPositive.'" onclick="clickDynamism('.$currentTable.',this.id)" title="'.$descriptionPositive.'" onmouseleave="mouseLeaveDynamism()" class="proposition">'.$positive.'</div>';
+    echo '<div id="'.$divIdNegativeDyn.'" onmouseover="mouseOverDynamism(this.id)" title="'.$descriptionNegative.'" onclick="clickDynamism('.$currentTable.',this.id)" title="'.$descriptionPositive.'" onmouseleave="mouseLeaveDynamism()" class="proposition">'.$negative.'</div>';
+    echo '<div id="'.$divIdSymmetricDyn.'" onmouseover="mouseOverDynamism(this.id)" title="'.$descriptionSymmetric.'" onclick="clickDynamism('.$currentTable.',this.id)" title="'.$descriptionPositive.'" onmouseleave="mouseLeaveDynamism()" class="proposition">'.$symmetric.'</div>';
     echo '</div>';
     echo '<div class="fruitConnector">';
     // echo '<div class="connector"></div>';
     // echo '<div class="connector"></div>';
-    // echo '<div class="connector"></div>';
+    // echo '<div class="connector"></div>'; // if i draw lines
     echo '</div>';
     echo '</div>';
   }
-  //  function refresh(){
-  //   header("refresh:2; url=tables.php?id=".$table."&option=Open");
-  //  }
 ?>

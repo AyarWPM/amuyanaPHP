@@ -1,6 +1,5 @@
   <?php
     $currentPage="systems";
-    // require_once 'includes/dbh.inc.php';
     include 'includes/header.php';
   ?>
   <div class="systems">
@@ -29,7 +28,6 @@
           echo '<div>Creation date: '.$data['creation_date'].'</div>';
           echo '<div>Description: '.$data['description'].'</div>';
           echo '<h3>Tables of deduction</h3>';
-          // getTables($_GET['id']);
 
           $sql = "SELECT * FROM tbl_tod WHERE tbl_tod.id_logic_system=".$_GET['id']." ;";
           $result = mysqli_query($conn,$sql);

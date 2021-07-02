@@ -1,11 +1,7 @@
 <?php
   $currentPage="dualities";
-  // require_once 'includes/dbh.inc.php';
   include 'includes/header.php';
-?>
-
-<div class="dualities">
-  <?php
+  echo '<div class="dualities">';
     // global $conn;
     $sql = "SELECT * FROM tbl_fcc;";
     $result = mysqli_query($conn,$sql);
@@ -155,5 +151,3 @@
     }
   ?>
 </div>
-
-<?php include 'includes/footer.php'?>

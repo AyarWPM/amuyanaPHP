@@ -3,7 +3,7 @@
   $table = $_POST['table'];
   $container1Id = $_POST['container1Id'];
   $duality = $_POST['duality'];
-
+  echo "<script>alert(".$duality.")<script>";
   if(empty($duality)){
     $newId;
     $fccName = "New Duality ";
@@ -14,6 +14,7 @@
       echo "Fcc NOT created.";
     } else {
       $newId = mysqli_insert_id($conn);
+      $duality = mysqli_insert_id($conn);
       // update with new FCC
       $fccName = $fccName.$newId;
       $sqlUpdateFcc = "UPDATE tbl_fcc SET name = '".$fccName."' WHERE id_fcc='".$newId."';";
@@ -21,7 +22,7 @@
         echo "Fcc NOT updated.<br>";
       }
     }
-  
+
     $element = "e".$newId;
     $antiElement = "e".$newId;
     $sqlNewElement = "INSERT INTO tbl_element (symbol, polarity, id_fcc) VALUES ('".$element."',0,'".$newId."');";
@@ -57,7 +58,7 @@
       echo "Symmetric Dynamism NOT created.<br>";
     }
   } else {
-    $newId = $_POST["duality"];
+    //$newId = $_POST["duality"];
   }
 
   // condition0: if it is an empty branch, create left and right trunks for the branch and container1s inside
@@ -65,7 +66,7 @@
   $results = mysqli_query($conn,$sqlCondition0);
   if($results->num_rows == 0){
     // create trunks for the branch and branches inside trunks
-// left side      
+  // left side      
     $sqlNC0L = "INSERT INTO tbl_container_0 (id_container_0) VALUES (null);";
     if(!mysqli_query($conn,$sqlNC0L)){
       echo "Error at creating C0.<br>";
@@ -116,7 +117,7 @@
 
   // create container2
   $sqlContainer2 = "INSERT INTO tbl_container_2 (id_fcc, id_container_1, sub_branch_order) 
-                    VALUES ('".$newId."','".$container1Id."','0');";
+                    VALUES ('".$duality."','".$container1Id."','0');";
   if(!mysqli_query($conn,$sqlContainer2)){
     echo "Container2 NOT created.<br>";
   }
@@ -171,7 +172,14 @@
   }
 
   
+  // new tbl_tod_has_tbl_fcc
+  $sqlTodFcc = "INSERT INTO tbl_tod_has_fcc (id_tod, id_fcc)  
+                VALUES ('".$table."', '".$duality."');";
+  if(!mysqli_query($conn,$sqlTodFcc)){
+    echo "mysql error 2.";
+  }
+  
   $url ="tables.php?id=".$table."&option=Open";
-  header("refresh:0; url=$url");
+  header("refresh:2; url=$url");
   exit();
 ?>

@@ -21,10 +21,11 @@ $result = mysqli_query($conn,$sqlCondition1);
 if(mysqli_num_rows($result) > 0){
   $condition1 = false;
   echo 'Condition1 = false : Cannot remove Duality '.$id_fcc.', the subBranches have dualities.<br>';
-    while($row=mysqli_fetch_assoc($result)){
-        $id = $row['id_fcc'];
-        $name = $row['name'];
-    }
+    // while($row=mysqli_fetch_assoc($result)){
+    //     $id = $row['id_fcc'];
+    //     $name = $row['name'];
+    // }
+    refresh(5);
 } else if (mysqli_num_rows($result) == 0){
   // No FCCS
   $condition1 = true;
@@ -64,6 +65,8 @@ if(mysqli_num_rows($result) > 0){
   //    yes: inform user, abort.
   //    no: check condition4
   $condition3;
+  $condition3a;
+  $condition3b;
   $sqlCondition3L;
   $sqlCondition3R;
   $leftDualities=array();
@@ -76,37 +79,49 @@ if(mysqli_num_rows($result) > 0){
         $rightDualities[] = $dualityInBranch;
       }
     }
-    // check left side
-    $sqlCondition3L = "SELECT id_inclusion FROM tbl_inclusion AS i 
-                        INNER JOIN tbl_dynamism AS dp ON dp.id_dynamism = i.id_particular 
-                        INNER JOIN tbl_dynamism AS dg ON dg.id_dynamism = i.id_general 
-                        INNER JOIN tbl_fcc as fp ON fp.id_fcc = dp.id_fcc 
-                        INNER JOIN tbl_fcc as fg ON fg.id_fcc = dg.id_fcc 
-                        WHERE (i.id_tod = '".$table."' AND fp.id_fcc = '".$id_fcc."') AND ( ";
-    $i = 0;
-    $len = count($leftDualities);
-    foreach ($leftDualities as $leftDuality) {
-      $generalFcc = $leftDuality['id_fcc'];
-      if ($i < $len-1) {
-        $sqlCondition3L = $sqlCondition4L."fg.id_fcc = '".$generalFcc."' OR ";
-      } else if ($i == $len - 1) {
-        $sqlCondition3L = $sqlCondition4L."fg.id_fcc = '".$generalFcc."' );";
+    if(empty( $leftDualities )){
+      echo "Condition3a = true.<br>";
+      $condition3a = true;
+    } else {
+      // check left side
+      $sqlCondition3L = "SELECT id_inclusion FROM tbl_inclusion AS i 
+                          INNER JOIN tbl_dynamism AS dp ON dp.id_dynamism = i.id_particular 
+                          INNER JOIN tbl_dynamism AS dg ON dg.id_dynamism = i.id_general 
+                          INNER JOIN tbl_fcc as fp ON fp.id_fcc = dp.id_fcc 
+                          INNER JOIN tbl_fcc as fg ON fg.id_fcc = dg.id_fcc 
+                          WHERE (i.id_tod = '".$table."' AND fp.id_fcc = '".$id_fcc."') AND ( ";
+      $i = 0;
+      $len = count($leftDualities);
+      foreach ($leftDualities as $leftDuality) {
+        $generalFcc = $leftDuality['id_fcc'];
+        if ($i < $len-1) {
+          $sqlCondition3L = $sqlCondition4L."fg.id_fcc = '".$generalFcc."' OR ";
+        } else if ($i == $len - 1) {
+          $sqlCondition3L = $sqlCondition4L."fg.id_fcc = '".$generalFcc."' );";
+        }
+        $i++;
       }
-      $i++;
+
+      $result = mysqli_query($conn,$sqlCondition3L);
+      if(mysqli_num_rows($result)>0){
+        $condition3a = false;
+        echo "Condition3 = false : There are inclusions with left side. Cannot remove duality.<br>";
+      } else if (mysqli_num_rows($result) == 0){
+
+      }
     }
 
-    $result = mysqli_query($conn,$sqlCondition3L);
-    if(mysqli_num_rows($result)>0){
-      $condition3 = false;
-      echo "Condition3 = false : There are inclusions with left side. Cannot remove duality.<br>";
-    } else if (mysqli_num_rows($result) == 0){
+    if(empty( $rightDualities )){
+      echo "Condition3b = true.<br>";
+      $condition3b = true;
+    } else {
       // if no left duality in the left trunk of the branch has inclusion, test the right ones
       $sqlCondition3R = "SELECT id_inclusion FROM tbl_inclusion AS i 
-                        INNER JOIN tbl_dynamism AS dp ON dp.id_dynamism = i.id_particular 
-                        INNER JOIN tbl_dynamism AS dg ON dg.id_dynamism = i.id_general 
-                        INNER JOIN tbl_fcc as fp ON fp.id_fcc = dp.id_fcc 
-                        INNER JOIN tbl_fcc as fg ON fg.id_fcc = dg.id_fcc 
-                        WHERE (i.id_tod = '".$table."' AND fg.id_fcc = '".$id_fcc."') AND ( "; 
+      INNER JOIN tbl_dynamism AS dp ON dp.id_dynamism = i.id_particular 
+      INNER JOIN tbl_dynamism AS dg ON dg.id_dynamism = i.id_general 
+      INNER JOIN tbl_fcc as fp ON fp.id_fcc = dp.id_fcc 
+      INNER JOIN tbl_fcc as fg ON fg.id_fcc = dg.id_fcc 
+      WHERE (i.id_tod = '".$table."' AND fg.id_fcc = '".$id_fcc."') AND ( "; 
       $j = 0;
       $len2 = count($rightDualities);
       foreach($rightDualities as $rightDuality){
@@ -116,19 +131,29 @@ if(mysqli_num_rows($result) > 0){
         } else if ($j == $len2-1){
           $sqlCondition3R = $sqlCondition3R."fp.id_fcc = '".$particular."' );";
         }
-        $j++;
+          $j++;
       }
 
       $result = mysqli_query($conn,$sqlCondition3R);
       if(mysqli_num_rows($result)>0){
-        $condition3 = false;
+        $condition3b = false;
         echo "Condition3 = false : There are inclusions with right side. Cannot remove duality.<br>";
       } else if (mysqli_num_rows($result) == 0){
-        $condition3 = true;
+        $condition3b = true;
         echo "Condition3 = true : No inclusions with dualities in branches.<br>";
-        // echo $sqlCondition3L."<br>";
-        // echo $sqlCondition3R;
+
       }
+    }
+    if(isset($condition3a) && isset($condition3b)){
+      if(!$condition3a || !$condition3b){
+        // there's one inclusion, abort.
+        $condition3 = false;
+        echo "condition3 = false : There are inclusions.<br>";
+        refresh(5);
+      } else if($condition5a && $condition5b){
+        $condition3 = true;
+        echo "condition3 = true : No inclusions.<br>";
+      } 
     }
   }
   
@@ -209,9 +234,7 @@ if(mysqli_num_rows($result) > 0){
  if(isset($condition1) && $condition1 && isset($condition4) && !$condition4){
     // check inclusions
     foreach($dualitiesInParents as $dualityInParent){
-      
       if($dualityInParent['side']==0){
-        
         $leftOfParentDualities[] = $dualityInParent;
         //echo print_r($leftOfParentDualities);
       } else if ($dualityInParent['side']==1){
@@ -219,6 +242,10 @@ if(mysqli_num_rows($result) > 0){
       }
     }
 
+  if(empty( $leftOfParentDualities )){
+    echo "Condition5a = true.<br>";
+    $condition5a = true;
+  } else {
     // left side (the parent is in the right)
     $sqlCondition5L = "SELECT id_inclusion FROM tbl_inclusion AS i 
                       INNER JOIN tbl_dynamism AS dp ON dp.id_dynamism = i.id_particular 
@@ -228,6 +255,7 @@ if(mysqli_num_rows($result) > 0){
                       WHERE (i.id_tod = '".$table."' AND fg.id_fcc = '".$id_fcc."') AND ( ";
     $i = 0;
     $len = count($leftOfParentDualities);
+    
     foreach ($leftOfParentDualities as $lopDuality) {
       $particularFcc = $lopDuality['id_fcc'];
       if ($i < $len-1) {
@@ -239,7 +267,6 @@ if(mysqli_num_rows($result) > 0){
     }
     $result = mysqli_query($conn,$sqlCondition5L);
     if($result){
-
       if(mysqli_num_rows($result)>0){
         $condition5a = false;
         echo "condition5a = false : There are inclusions.<br>";
@@ -247,8 +274,15 @@ if(mysqli_num_rows($result) > 0){
         $condition5a = true;
         echo "condition5a = true : No inclusions.<br>";
       }
+    } else{
+      echo "mysql error";
     }
+  }
 
+  if(empty( $rightOfParentDualities )){
+    echo "Condition5b = true.<br>";
+    $condition5b = true;
+  } else {
     // right side (the parent is in the left)
     $sqlCondition5R = "SELECT id_inclusion FROM tbl_inclusion AS i 
                       INNER JOIN tbl_dynamism AS dp ON dp.id_dynamism = i.id_particular 
@@ -276,15 +310,18 @@ if(mysqli_num_rows($result) > 0){
       $condition5b = true;
       echo "condition5b = true : No inclusions.<br>";
     }
+  }
 
     if(isset($condition5a) && isset($condition5b)){
       if(!$condition5a || !$condition5b){
         // there's one inclusion, abort.
-        echo "aborting.<br>";
         $condition5 = false;
+        echo "condition5 = false : There are inclusions.<br>";
+        refresh(5);
       } else if($condition5a && $condition5b){
         // remove
         $condition5 = true;
+        echo "condition5 = true : No inclusions.<br>";
       } 
     }
   }
@@ -335,10 +372,15 @@ if(mysqli_num_rows($result) > 0){
     if(!mysqli_query($conn,$sqlDelete)){
       echo "Error2";
     } else {
-      echo "Duality removed.";
-      header("refresh:0;url=tables.php?id=".$table."&option=Open");
+      $sqlDeleteTodFcc = "DELETE FROM tbl_tod_has_fcc WHERE id_tod = '".$table."' AND id_fcc = '".$id_fcc."'";
+      if(!mysqli_query($conn,$sqlDeleteTodFcc)){
+        echo "mysql error";
+      } else {
+        echo "Duality removed.";
+        refresh(0);
+      }
     }
-  } else if (isset($condition6) && !$condition6){
+  } else if (isset($condition6) && !$condition6 && $condition2){
     // delete subbranches and branches' trunks
     $sqlDelete = "DELETE c1b, c1s, c0b, c0s, c0i1, c0i2, c2 FROM tbl_container_1 AS c1
     INNER JOIN tbl_container_0_in_1 AS c0i1 ON c0i1.id_container_1 = c1.id_container_1
@@ -353,13 +395,26 @@ if(mysqli_num_rows($result) > 0){
     if(!mysqli_query($conn,$sqlDelete)){
       echo "error1";
     } else {
-      echo "Duality removed.";
-      header("refresh:0;url=tables.php?id=".$table."&option=Open");
+      $sqlDeleteTodFcc = "DELETE FROM tbl_tod_has_fcc WHERE id_tod = '".$table."' AND id_fcc = '".$id_fcc."'";
+      if(!mysqli_query($conn,$sqlDeleteTodFcc)){
+        echo "mysql error";
+      } else {
+        echo "Duality removed.";
+        refresh(0);
+      }
     }
-  }
-  if(!isset($condition6)){
+  } else if (isset($condition6) && !$condition2){
     $location = "tables.php?id=".$table."&option=Open";
-    echo "Refreshing the page in 5 seconds...";
-    header("refresh:5;url=tables.php?id=".$table."&option=Open");
+    echo "Cannot delete the duality, it is the last of the branch and it has dependencies.<br>";
+    refresh(5);
   }
+
+  function refresh($sec){
+    global $table;
+    $h = "refresh:".$sec.";url=tables.php?id=".$table."&option=Open";
+    echo "Refreshing the page in ".$sec." seconds...";
+    header($h);
+    exit();
+  }
+  
   ?>

@@ -5,16 +5,141 @@ var listInclusions;
 var listContainer0s;
 var listContainer1s;
 var listContainer2s;
+var isSelectedDyn = false;
+var selectedDynDiv;
+var selectedDynDivId;
 
+function clickDynamism(todId, dynDivId){
+  var dynDiv = document.getElementById(dynDivId);
+  dynDiv.setAttribute("style","background-color: rgba(0, 255, 155); border-radius:10px;");
+  if(window.isSelectedDyn){
+    // check which one is inside which one
+    // H1: selected is parent
+    var h1a = false;
+    var h1b = false;
+    var selectedSubDiv = getSubBranch(selectedDynDiv);
+    var trunkDiv = getTrunk(dynDiv);
+    var dynId = dynDivId.split("dyn").pop();
+    var selectedDynId = selectedDynDivId.split("dyn").pop();
+
+    if(trunkDiv.parentElement.className=="subBranch"){
+      // H1a: dynDiv is child subBranch
+      if(selectedSubDiv.isSameNode(trunkDiv.parentElement)){
+        h1a = true;
+        // deduce which one is particular 
+        if(trunkDiv.className == "trunk leftTrunk"){
+          var dynIdParticular = selectedDynId;
+          var dynIdGeneral = dynId;
+        } else if (trunkDiv.className == "trunk rightTrunk"){
+          var dynIdParticular = dynId;
+          var dynIdGeneral = selectedDynId;
+        } 
+        alert("Updating inclusion");
+        $("#canvas").load("updateInclusion.php", {
+          id_tod: todId,
+          particular: dynIdParticular,
+          general: dynIdGeneral
+        });
+      }
+    } else if(trunkDiv.parentElement.className=="branch"){
+      if(trunkDiv.parentElement.isSameNode(selectedSubDiv.parentElement.parentElement)){
+        // H1b: dynDiv is child branch
+        h1b = true;
+        if(trunkDiv.className == "trunk leftTrunk"){
+          var dynIdParticular = selectedDynId;
+          var dynIdGeneral = dynId;
+        } else if (trunkDiv.className == "trunk rightTrunk"){
+          var dynIdParticular = dynId;
+          var dynIdGeneral = selectedDynId;
+        } 
+        alert("Updating inclusion");
+        $("#canvas").load("updateInclusion.php", {
+          id_tod: todId,
+          particular: dynIdParticular,
+          general: dynIdGeneral
+        });
+      }
+    } 
+
+    // H2: selected is child
+    var h2a = false;
+    var h2b = false;
+    var selectedTrunkDiv = getTrunk(selectedDynDiv);
+    var subDiv = getSubBranch(dynDiv);
+    if(selectedTrunkDiv.parentElement.className=="subBranch"){
+      // H2a: dynDiv is parent by subBranch
+      if(subDiv.isSameNode(selectedTrunkDiv.parentElement)){
+        h2a = true;
+        // deduce which one is particular 
+        if(selectedTrunkDiv.className == "trunk leftTrunk"){
+          var dynIdParticular = dynId;
+          var dynIdGeneral = selectedDynId;
+        } else if (selectedTrunkDiv.className == "trunk rightTrunk"){
+          var dynIdParticular = selectedDynId;
+          var dynIdGeneral = dynId;
+        } 
+        alert("Updating inclusion");
+        $("#canvas").load("updateInclusion.php", {
+          id_tod: todId,
+          particular: dynIdParticular,
+          general: dynIdGeneral
+        });
+      }
+      
+    } else if(selectedTrunkDiv.parentElement.className=="branch"){
+      // H1b: dynDiv is child branch
+      if(selectedTrunkDiv.parentElement.isSameNode(subDiv.parentElement.parentElement)){
+        h2b = true;
+        // deduce which one is particular 
+        if(selectedTrunkDiv.className == "trunk leftTrunk"){
+          var dynIdParticular = dynId;
+          var dynIdGeneral = selectedDynId;
+        } else if (selectedTrunkDiv.className == "trunk rightTrunk"){
+          var dynIdParticular = selectedDynId;
+          var dynIdGeneral = dynId;
+        } 
+        alert("Updating inclusion");
+        $("#canvas").load("updateInclusion.php", {
+          id_tod: todId,
+          particular: dynIdParticular,
+          general: dynIdGeneral
+        });
+      }
+    } 
+    if(!h1a &&! h1b && !h2a && !h2b){
+      alert("You cannot create an inclusion between these two dynamisms.")
+    }
+    window.isSelectedDyn = false;
+    window.selectedDynDiv = null;
+    window.selectedDynDivId = null;
+  } else {
+    window.isSelectedDyn = true;
+    window.selectedDynDiv = document.getElementById(dynDivId);
+    window.selectedDynDivId = dynDivId;
+  }
+}
+function getSubBranch(dynDiv){
+  return dynDiv.parentElement.parentElement.parentElement.parentElement;
+}
+
+function getBranch(dynDiv){
+  return dynDiv.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+}
+
+function getTrunk(dynDiv){
+  return dynDiv.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+}
 function mouseOverDynamism(hoverId){
   mouseLeaveDynamism();
-
   var id = hoverId.split("dyn").pop();
   // check if id is general
   listInclusions.forEach((inclusion, i) => {
   if(inclusion.id_general==id){
     var div1 = document.getElementById(hoverId);
-    div1.setAttribute("style","background-color: rgba(255, 255, 155); border-radius:10px;");
+//
+    if(hoverId!=selectedDynDivId){
+      div1.setAttribute("style","background-color: rgba(255, 255, 155); border-radius:10px;");
+    }
     listDynamisms.forEach((item, i) => {
       var particular = item.split("dyn").pop();
       if(particular==inclusion.id_particular){
@@ -30,12 +155,13 @@ function mouseOverDynamism(hoverId){
     });
   }
   });
-
   // check if id is particular
   listInclusions.forEach((inclusion, i) => {
   if(inclusion.id_particular==id){
     var div1 = document.getElementById(hoverId);
-    div1.setAttribute("style","background-color: rgba(255, 255, 155); border-radius:10px;");
+    if(hoverId!=selectedDynDivId){
+      div1.setAttribute("style","background-color: rgba(255, 255, 155); border-radius:10px;");
+    }
     listDynamisms.forEach((item, i) => {
       var general = item.split("dyn").pop();
       if(general==inclusion.id_general){
@@ -51,22 +177,25 @@ function mouseOverDynamism(hoverId){
     });
   }
   });
-
 }
 
 function mouseLeaveDynamism(){
     listDynamisms.forEach((id, i) => {
-      var div = document.getElementById(id);
-      div.setAttribute("style","background-color:transparent");
+      if(id!=selectedDynDivId){
+        var div = document.getElementById(id);
+        div.setAttribute("style","background-color:transparent");
+      }
     });
 }
+
+
 
 function mouseOverBranch(branchId){
   var id = branchId.split("branch").pop();
   var addInBranchId = "addInBranchButton"+id;
   var addInBranchDiv = document.getElementById(addInBranchId);
   addInBranchDiv.setAttribute("style","opacity:1;");
-
+//
   menuAddDualityId = "menuAddDuality"+id;
   $("#".menuAddDualityId).menu();
   $("#".menuAddDualityId).menu("collapse");
@@ -85,10 +214,10 @@ function mouseOverAddInBranchButton(buttonId){
   branchId = "branch"+id;
   var branchDiv = document.getElementById(branchId);
   branchDiv.setAttribute("style","border-color:rgba(255, 0, 0, 1);border-width:2px;");
-  
+  //
   var buttonDiv = document.getElementById(buttonId);
   buttonDiv.setAttribute("style", "opacity:1;background-color:lightgrey;z-index:9999;");
-
+//
   var selectorId = "selector"+id;
   var selectorDiv = document.getElementById(selectorId);
   selectorDiv.setAttribute("style", "visibility:visible;overflow:visible;");
@@ -97,35 +226,23 @@ function mouseOverAddInBranchButton(buttonId){
 function mouseLeaveAddInBranchButton(buttonId){
   var buttonDiv = document.getElementById(buttonId);
   buttonDiv.setAttribute("style", "opacity:0;");
-
+//
   var id = buttonId.split("addInBranchButton").pop();
   var branchId = "branch"+id;
   var branchDiv = document.getElementById(branchId);
   branchDiv.setAttribute("style", "border-color:rgba(255, 0, 0, 0);border-width:2px;");
-
+//
   var selectorId = "selector"+id;
   var selectorDiv = document.getElementById(selectorId);
   selectorDiv.setAttribute("style", "visibility:hidden;");  
 }
 
 function loadMenuAddInBranch(table, container1){
-    menuAddDualityContentId = "menuAddDualityContent"+container1;
-    $("#"+menuAddDualityContentId).load("menuAddDuality.php", {
-      container1Id: container1,
-      table:table
-    });   
-}
-
-function openMenuAddDualityInBranch(buttonId){
-  // var id = buttonId.split("addInBranchButton").pop();
-  // branchId = "branch"+id;
-
-  // var buttonDiv = document.getElementById(buttonId);
-  // buttonDiv.setAttribute("style", "opacity:1;background-color:lightgrey;z-index:9999;");
-
-  // var selectorId = "selector"+id;
-  // var selectorDiv = document.getElementById(selectorId);
-  // selectorDiv.setAttribute("style", "visibility:visible;overflow:visible;");
+  menuAddDualityContentId = "menuAddDualityContent"+container1;
+  $("#"+menuAddDualityContentId).load("menuAddDuality.php", {
+    container1Id: container1,
+    table:table
+  });   
 }
 
 function deleteTod(tod){
@@ -193,7 +310,6 @@ function deleteTod(tod){
     });
   } 
   
-  // $(document.documentElement).load("deleteTod.php", {
   $("#canvas").load("deleteTod.php", {
     tod: tod,
     sqlDeleteContainer0in1s: sqlContainer0in1s,

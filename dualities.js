@@ -6,7 +6,6 @@ function editDuality(divId, container2Id, currentTable){
     table: currentTable
   });
   $("#dualityEditor").show(); 
-  // $("#dualityEditor" ).resizable(); 
 }
 
 function closeDualityEditor(){
@@ -19,7 +18,6 @@ function removeDuality(currentTable, idFcc, idContainer2){
   var f = idFcc;
   var c2 = idContainer2;
   $("#dualityEditor").load("removeDuality.php");
-  // $('#dualityEditor').show(); 
 }
 
 function refresh(location){
@@ -33,8 +31,3 @@ function cancelDelete(){
   $("#confirmDeleteDuality").hide();
   $("#deleteDualityBtn").show();
 }
-// function saveDualityEditor(id_fcc, name, description, element, antiElement, positiveLabel, positiveDescription, negativeLabel, negativeDescription, symmetricLabel, symmetricDescription){
-//   $("#dualityEditor").load("dualityEditor.php", {
-//     id_fcc: id
-//   });
-// }
