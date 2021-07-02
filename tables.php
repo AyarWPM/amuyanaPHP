@@ -1,15 +1,18 @@
 <?php
 ob_start(); // to make header work
 // global variables declarations
+include 'includes/header.php';
   $currentPage="tables";
+  $option;
   $currentTable;
-  include 'includes/header.php';
+
   if(isset($_GET['option'])){
     $option=$_GET['option'];
   }
   if(isset($_GET["id"])){
     $currentTable = $_GET["id"];
   }
+
   $id_container_0;
   $dynArray = array();
   $container0sAggregated=array();
@@ -24,16 +27,36 @@ ob_start(); // to make header work
   if(!isset($option)){
     getTableSelector();
     getCanvas();
-  } else if($option == "Open"){
-    getTableSelector();
-    if(isset($currentTable)){
-      getCanvas();
-    } else {
-      echo '<div class="canvas" id="canvas">';
-      echo "Select a table from the list or create a new one.";
-      echo '</div>';
+  } else {
+    if($option == "Open"){
+      getTableSelector();
+      if(isset($currentTable)){
+        getCanvas();
+      } else {
+        echo '<div class="canvas" id="canvas">';
+        echo "Select a table from the list or create a new one.";
+        echo '</div>';
+      }
+    } else if ($option=="New"){
+      createNewTod();
+    } else if($option=="Delete"){
+      getTableSelector();
+      if(isset($currentTable)){
+        getCanvas();
+        echo "<script>deleteTod(".$currentTable.")</script>";
+        header( "refresh:2; url=tables.php" );
+        exit();
+      } else {
+        echo '<div class="canvas" id="canvas">';
+        echo "Select a table from the list.";
+        echo '</div>';
+      }
     }
-  } else if ($option=="New"){
+  }
+
+  function createNewTod(){
+    global $conn;
+    global $currentTable;
     $newContainer0Id;
     $sqlNewContainer0 = "INSERT INTO tbl_container_0 (id_container_0) VALUES (null);";
     if(!mysqli_query($conn,$sqlNewContainer0)){
@@ -41,7 +64,7 @@ ob_start(); // to make header work
     } else {
       $newContainer0Id = mysqli_insert_id($conn);
     }
-    $sqlNewContainer1 = "INSERT INTO tbl_container_1 (id_container_0) VALUES ('".$newContainer0Id."')";
+    $sqlNewContainer1 = "INSERT INTO tbl_container_1 (id_container_0) VALUES ('".$newContainer0Id."');";
     
     if(!mysqli_query($conn,$sqlNewContainer1)){
       echo "Error at creating new container1.<br>";
@@ -56,15 +79,17 @@ ob_start(); // to make header work
     }
     
     $sqlNewTable = "INSERT INTO tbl_tod (id_container_0) 
-                    VALUES ('".$newContainer0Id."')";
+                    VALUES ('".$newContainer0Id."');";
+
     if(!mysqli_query($conn,$sqlNewTable)){
-      echo "Error at creating new table.<br>".$newContainer0Id;
+      echo "Error at creating new table.<br>";
+      
     } else {
-      $newTodId = mysqli_insert_id($conn);
-      $currentTable = $newTodId;
-      $label = "New Table of deductions ".$newTodId;
+      // $newTodId = mysqli_insert_id($conn);
+      $currentTable = mysqli_insert_id($conn);
+      $label = "New Table of deductions ".$currentTable;
       $sqlUpdateTable = "UPDATE tbl_tod SET label ='".$label."' 
-                        WHERE id_tod = '".$newTodId."';";
+                        WHERE id_tod = '".$currentTable."';";
       if(!mysqli_query($conn,$sqlUpdateTable)){
         echo "Error at updating table.<br>";
       } else {
@@ -75,27 +100,20 @@ ob_start(); // to make header work
     $url = "tables.php?id=".$currentTable."&option=Open";
     header( "refresh:0; url=$url" );
     exit();
-  } else if($option=="Delete"){
-    getTableSelector();
-    if(isset($currentTable)){
-      getCanvas();
-      echo "<script>deleteTod(".$currentTable.")</script>";
-      header( "refresh:1; url=tables.php" );
-      exit();
-    } else {
-      echo '<div class="canvas" id="canvas">';
-      echo "Select a table from the list.";
-      echo '</div>';
-    }
   }
 
+
+
   function getTableSelector(){
+    global $conn;
+    global $currentTable;
+    global $id_container_0;
+    
     echo '<div class="select">';
     echo '<form action="tables.php" method="get">';
     echo '<select name="id">';
     $sql = "SELECT * FROM tbl_tod;";
-    global $conn;
-
+    
     $result = mysqli_query($conn,$sql);
     $datas=array();
     $isResult = false;
@@ -106,8 +124,7 @@ ob_start(); // to make header work
         $datas[] = $row;
       }
     }
-    global $currentTable;
-    global $id_container_0;
+
     foreach($datas as $data){
       if($data["id_tod"]==$currentTable){
         $id_container_0 = $data['id_container_0'];
@@ -134,14 +151,20 @@ ob_start(); // to make header work
     global $container2sArrayEncoded;
     global $inclusionsArrayEncoded;
     global $conn;
+    global $currentTable;
     
     echo '<div class="canvas" id="canvas">';
-    
     if(!isset($option)){
       echo '<div class="message">To begin open an existing table or create a new one.</div>';
-    } else if (isset($option) && ($option=="Open" || $option=="New" || $option=="Delete")){
-      
+    } else if (isset($option)){
+      if($option=="Delete"){
+        echo '<div style="display:none;">';
+      }
       getTree($id_container_0);
+      if($option=="Delete"){
+        echo '</div">';
+        echo "Deleting Table, please wait...";
+      }
       echo '<div id="dualityEditor" class="ui-widget-content"></div>';
       echo '<div id="container0sArrayDiv" style="display:none;">'.$container0sArrayEncoded.'</div>';
       echo '<div id="container1sArrayDiv" style="display:none;">'.$container1sArrayEncoded.'</div>';
@@ -150,23 +173,24 @@ ob_start(); // to make header work
       $dynArrayEncoded = json_encode($dynArray); // move after getTrunk() in code.php after dvlping delete Tod
 
       echo '<div id="dynamismsArrayDiv" style="display:none;">'.$dynArrayEncoded.'</div>';
-      global $currentTable;
+
       // get data of inclusions, encode
       $sql = "SELECT id_particular, id_general FROM tbl_inclusion
       WHERE id_tod=".$currentTable.";";
       $result = mysqli_query($conn,$sql);
       $datas=array();
-      if(mysqli_num_rows($result) > 0){
-        while($row=mysqli_fetch_assoc($result)){
-          $datas[] = $row;
+      if($result){
+        if(mysqli_num_rows($result) > 0){
+          while($row=mysqli_fetch_assoc($result)){
+            $datas[] = $row;
+          }
         }
       }
       $inclusionsArrayEncoded = json_encode($datas);
       echo '<div id="inclusionsArrayDiv" style="display:none;">'.$inclusionsArrayEncoded.'</div>';
-
       echo '<script>setLists()</script>';
     }
     echo '</div>'; // canvas
   }
+  echo '</div>'; // table
 ?>
-  </div>  <!-- table-->

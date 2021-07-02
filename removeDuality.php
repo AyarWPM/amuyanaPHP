@@ -18,18 +18,18 @@
                     INNER JOIN tbl_container_2 AS c2o ON c2o.id_container_2 = c0i2.id_container_2
                     WHERE c2o.id_container_2 = '".$id_container_2."';";
 $result = mysqli_query($conn,$sqlCondition1);
-if(mysqli_num_rows($result) > 0){
-  $condition1 = false;
-  echo 'Condition1 = false : Cannot remove Duality '.$id_fcc.', the subBranches have dualities.<br>';
-    // while($row=mysqli_fetch_assoc($result)){
-    //     $id = $row['id_fcc'];
-    //     $name = $row['name'];
-    // }
-    refresh(5);
-} else if (mysqli_num_rows($result) == 0){
-  // No FCCS
-  $condition1 = true;
-  echo "Condition1 = true : There are no FCCs it the subBranches.<br>";
+if(!$result){
+  echo "Error selecting fcc in subBranches.<br>";
+} else {
+  if(mysqli_num_rows($result) > 0){
+    $condition1 = false;
+    echo 'Condition1 = false : Cannot remove Duality '.$id_fcc.', the subBranches have dualities.<br>';
+      refresh(5);
+  } else if (mysqli_num_rows($result) == 0){
+    // No FCCS
+    $condition1 = true;
+    echo "Condition1 = true : There are no FCCs it the subBranches.<br>";
+  }
 }
 
   // condition2: check if if has branches' trunks have FCCs
@@ -49,7 +49,10 @@ if(mysqli_num_rows($result) > 0){
     WHERE c2o.id_container_2 = '".$id_container_2."';";
 
     $result = mysqli_query($conn,$sqlCondition2);
-    if(mysqli_num_rows($result) > 0){
+    if(!$result){
+      echo "Error selecting fcc in branches.<br>";
+    } else {
+      if(mysqli_num_rows($result) > 0){
       $condition2 = false;
       echo "Condition2 = false : The branches of container2=".$id_container_2." have dualities.<br>";
       while($row=mysqli_fetch_assoc($result)){
@@ -58,6 +61,7 @@ if(mysqli_num_rows($result) > 0){
     } else if (mysqli_num_rows($result) == 0){
       $condition2 = true;
       echo "Condition2 = true : The branches of container2=".$id_container_2." do not have dualities.<br>";
+    }
     }
   }
    
@@ -103,11 +107,15 @@ if(mysqli_num_rows($result) > 0){
       }
 
       $result = mysqli_query($conn,$sqlCondition3L);
-      if(mysqli_num_rows($result)>0){
+      if(!$result){
+        echo "Error selecting inclusions from subBranches.<br>";
+      } else {
+        if(mysqli_num_rows($result)>0){
         $condition3a = false;
         echo "Condition3 = false : There are inclusions with left side. Cannot remove duality.<br>";
-      } else if (mysqli_num_rows($result) == 0){
-
+        } else if (mysqli_num_rows($result) == 0){
+          echo "No inclusions.<br>";
+        }
       }
     }
 
@@ -135,13 +143,16 @@ if(mysqli_num_rows($result) > 0){
       }
 
       $result = mysqli_query($conn,$sqlCondition3R);
-      if(mysqli_num_rows($result)>0){
+      if(!$result){
+        echo "Error selecting inclusions from branches.<br>";
+      } else {
+        if(mysqli_num_rows($result)>0){
         $condition3b = false;
         echo "Condition3 = false : There are inclusions with right side. Cannot remove duality.<br>";
       } else if (mysqli_num_rows($result) == 0){
         $condition3b = true;
         echo "Condition3 = true : No inclusions with dualities in branches.<br>";
-
+      }
       }
     }
     if(isset($condition3a) && isset($condition3b)){
@@ -175,8 +186,10 @@ if(mysqli_num_rows($result) > 0){
                           INNER JOIN tbl_container_2 AS c2o ON c1o.id_container_1 = c2o.id_container_1 
                           WHERE c2o.id_container_2 = '".$id_container_2."';";
     $result = mysqli_query($conn,$sqlCondition4Branch);
-    if($result){
-      if(mysqli_num_rows($result)>0){
+    if(!$result){
+      echo "Error selecting condition4.<br>";
+    } else {
+            if(mysqli_num_rows($result)>0){
         $condition4a = true;
         echo "Condition4a = true : it is in a branch.<br>";
 
@@ -208,7 +221,9 @@ if(mysqli_num_rows($result) > 0){
         $condition4b = false;
         echo "Condition4b = false : No subBranches have this duality.<br>";
       }
-    } 
+    } else {
+      echo "Error selecting fccs condition h2.<br>";
+    }
    
     if((isset($condition4a) && $condition4a) || (isset($condition4b) && $condition4b)){
       $condition4 = false;
@@ -275,7 +290,7 @@ if(mysqli_num_rows($result) > 0){
         echo "condition5a = true : No inclusions.<br>";
       }
     } else{
-      echo "mysql error";
+      echo "mysql error on selecting inclusions.<br>";
     }
   }
 
@@ -349,7 +364,7 @@ if(mysqli_num_rows($result) > 0){
     $sqlcondition6 = "SELECT c2d.id_container_2 FROM tbl_container_2 AS c2d 
                       INNER JOIN tbl_container_1 AS c1d ON c1d.id_container_1=c2d.id_container_1
                       INNER JOIN tbl_container_2 AS c2o ON c2o.id_container_1 = c1d.id_container_1
-                      WHERE c2o.id_container_2 = '".$id_container_2."'";
+                      WHERE c2o.id_container_2 = '".$id_container_2."';";
     $result = mysqli_query($conn,$sqlcondition6);
     if(mysqli_num_rows($result)==1){
       $condition6 = false;
@@ -368,13 +383,13 @@ if(mysqli_num_rows($result) > 0){
     INNER JOIN tbl_container_1 AS c1s ON c1s.id_container_0 = c0i2.id_container_0
     INNER JOIN tbl_container_0 AS c0s ON c0s.id_container_0 = c0i2.id_container_0
     INNER JOIN tbl_fcc AS f ON f.id_fcc = c2.id_fcc
-    WHERE f.id_fcc = '".$id_fcc."'";
+    WHERE f.id_fcc = '".$id_fcc."';";
     if(!mysqli_query($conn,$sqlDelete)){
       echo "Error2";
     } else {
       $sqlDeleteTodFcc = "DELETE FROM tbl_tod_has_fcc WHERE id_tod = '".$table."' AND id_fcc = '".$id_fcc."'";
       if(!mysqli_query($conn,$sqlDeleteTodFcc)){
-        echo "mysql error";
+        echo "mysql error on deleting only subbranches.<br>";
       } else {
         echo "Duality removed.";
         refresh(0);
@@ -393,11 +408,11 @@ if(mysqli_num_rows($result) > 0){
     INNER JOIN tbl_fcc AS f ON f.id_fcc = c2.id_fcc
     WHERE f.id_fcc = '".$id_fcc."'";
     if(!mysqli_query($conn,$sqlDelete)){
-      echo "error1";
+      echo "error on deleting stuff.<br>";
     } else {
-      $sqlDeleteTodFcc = "DELETE FROM tbl_tod_has_fcc WHERE id_tod = '".$table."' AND id_fcc = '".$id_fcc."'";
+      $sqlDeleteTodFcc = "DELETE FROM tbl_tod_has_fcc WHERE id_tod = '".$table."' AND id_fcc = '".$id_fcc."';";
       if(!mysqli_query($conn,$sqlDeleteTodFcc)){
-        echo "mysql error";
+        echo "mysql error on deleting subBranches and branches.<br>";
       } else {
         echo "Duality removed.";
         refresh(0);

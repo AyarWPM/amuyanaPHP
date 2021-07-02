@@ -275,24 +275,24 @@ function deleteTod(tod){
   }
   
   // container0
-  var sqlContainer0s = "DELETE FROM tbl_container_0 AS c0 WHERE ";
+  var sqlContainer0s = "DELETE FROM tbl_container_0 WHERE ";
   var len = listContainer0s.length;
   listContainer0s.forEach((item, i) => {
     if(i<len-1){
-      sqlContainer0s= sqlContainer0s+"c0.id_container_0 = '"+item+"' OR ";
+      sqlContainer0s= sqlContainer0s+"tbl_container_0.id_container_0 = '"+item+"' OR ";
     } else if (i==len-1){
-      sqlContainer0s=sqlContainer0s+"c0.id_container_0 = '"+item+"';";
+      sqlContainer0s=sqlContainer0s+"tbl_container_0.id_container_0 = '"+item+"';";
     }
   });
 
   // container1
-  var sqlContainer1s = "DELETE FROM tbl_container_1 AS c1 WHERE ";
+  var sqlContainer1s = "DELETE FROM tbl_container_1 WHERE ";
   var len = listContainer1s.length;
   listContainer1s.forEach((item, i) => {
     if(i<len-1){
-      sqlContainer1s= sqlContainer1s+"c1.id_container_1 = '"+item+"' OR ";
+      sqlContainer1s= sqlContainer1s+"tbl_container_1.id_container_1 = '"+item+"' OR ";
     } else if (i==len-1){
-      sqlContainer1s=sqlContainer1s+"c1.id_container_1 = '"+item+"';";
+      sqlContainer1s=sqlContainer1s+"tbl_container_1.id_container_1 = '"+item+"';";
     }
   });
 

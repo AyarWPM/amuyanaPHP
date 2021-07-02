@@ -72,14 +72,14 @@
       echo "Error at creating C0.<br>";
     }
     $nC0LId=mysqli_insert_id($conn);
-    $sqlNC1L = "INSERT INTO tbl_container_1 (id_container_0) VALUES ('".$nC0LId."')";
+    $sqlNC1L = "INSERT INTO tbl_container_1 (id_container_0) VALUES ('".$nC0LId."');";
     $nC1LID;
     if(!mysqli_query($conn,$sqlNC1L)){
       echo "Error at creating C1.<br>";
     } else {
       // update
       $nC1LID = mysqli_insert_id($conn);
-      $sqlUpdateNC1L = "UPDATE tbl_container_1 SET branch_order = '".$nC1LID."' WHERE id_container_1='".$nC1LID."'";
+      $sqlUpdateNC1L = "UPDATE tbl_container_1 SET branch_order = '".$nC1LID."' WHERE id_container_1='".$nC1LID."';";
       if(!mysqli_query($conn,$sqlUpdateNC1L)){
         echo "Error at updating NC1.<br>";
       }
@@ -96,14 +96,14 @@
       echo "Error at creating C0.<br>";
     }
     $nC0RId=mysqli_insert_id($conn);
-    $sqlNC1R = "INSERT INTO tbl_container_1 (id_container_0) VALUES ('".$nC0RId."')";
+    $sqlNC1R = "INSERT INTO tbl_container_1 (id_container_0) VALUES ('".$nC0RId."');";
     $nC1RID;
     if(!mysqli_query($conn,$sqlNC1R)){
       echo "Error at creating C1.<br>";
     } else {
       // update
       $nC1RID = mysqli_insert_id($conn);
-      $sqlUpdateNC1R = "UPDATE tbl_container_1 SET branch_order = '".$nC1RID."' WHERE id_container_1='".$nC1RID."'";
+      $sqlUpdateNC1R = "UPDATE tbl_container_1 SET branch_order = '".$nC1RID."' WHERE id_container_1='".$nC1RID."';";
       if(!mysqli_query($conn,$sqlUpdateNC1R)){
         echo "Error at updating NC1.<br>";
       }
@@ -139,7 +139,7 @@
     echo "Left Container1 NOT created.<br>";
   } else {
     $newId = mysqli_insert_id($conn);
-    $sqlUpdateC1 = "UPDATE tbl_container_1 SET branch_order = '".$newId."' WHERE id_container_1='".$newId."'";
+    $sqlUpdateC1 = "UPDATE tbl_container_1 SET branch_order = '".$newId."' WHERE id_container_1='".$newId."';";
     if(!mysqli_query($conn,$sqlUpdateC1)){
       echo "Error at updating NC1.<br>";
     }
@@ -161,7 +161,7 @@
   } else {
     // update branch_order
     $newId = mysqli_insert_id($conn);
-    $sqlUpdateC1 = "UPDATE tbl_container_1 SET branch_order = '".$newId."' WHERE id_container_1='".$newId."'";
+    $sqlUpdateC1 = "UPDATE tbl_container_1 SET branch_order = '".$newId."' WHERE id_container_1='".$newId."';";
     if(!mysqli_query($conn,$sqlUpdateC1)){
       echo "Error at updating NC1.<br>";
     }
@@ -171,8 +171,6 @@
     echo "Container0in2 Right NOT created.<br>";
   }
 
-  
-  // new tbl_tod_has_tbl_fcc
   $sqlTodFcc = "INSERT INTO tbl_tod_has_fcc (id_tod, id_fcc)  
                 VALUES ('".$table."', '".$duality."');";
   if(!mysqli_query($conn,$sqlTodFcc)){
@@ -180,6 +178,6 @@
   }
   
   $url ="tables.php?id=".$table."&option=Open";
-  header("refresh:2; url=$url");
+  header("refresh:0; url=$url");
   exit();
 ?>

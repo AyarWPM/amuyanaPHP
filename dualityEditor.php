@@ -5,7 +5,7 @@
     $container2Id = $_POST['id_container_2'];
     $name = "";
     $description = "";
-    $sql = "SELECT name, description FROM tbl_fcc WHERE id_fcc=$id_fcc;";
+    $sql = "SELECT name, description FROM tbl_fcc WHERE id_fcc='".$id_fcc."';";
     $result = mysqli_query($conn,$sql);
     if(mysqli_num_rows($result) > 0){
         while($row=mysqli_fetch_assoc($result)){
@@ -15,7 +15,7 @@
     }
     $element = "";
     $antiElement= "";
-    $sql = "SELECT symbol, polarity FROM tbl_element WHERE id_fcc=$id_fcc;";
+    $sql = "SELECT symbol, polarity FROM tbl_element WHERE id_fcc='".$id_fcc."';";
     $result = mysqli_query($conn,$sql);
     if(mysqli_num_rows($result) > 0){
         while($row=mysqli_fetch_assoc($result)){
@@ -33,7 +33,7 @@
     $negativeDescription = "";
     $symmetricLabel = "";
     $symmetricDescription = "";
-    $sql = "SELECT orientation, proposition, description FROM tbl_dynamism WHERE id_fcc=$id_fcc;";
+    $sql = "SELECT orientation, proposition, description FROM tbl_dynamism WHERE id_fcc='".$id_fcc."';";
     $result = mysqli_query($conn,$sql);
     if(mysqli_num_rows($result) > 0){
         while($row=mysqli_fetch_assoc($result)){

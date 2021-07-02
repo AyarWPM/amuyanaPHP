@@ -27,7 +27,7 @@
         $description = $data['description'];
         $element = "";
         $antiElement ="";
-        $sql = 'SELECT symbol, polarity FROM tbl_element WHERE tbl_element.id_fcc='.$id_fcc.';';
+        $sql = "SELECT symbol, polarity FROM tbl_element WHERE tbl_element.id_fcc='".$id_fcc."';";
         $result = mysqli_query($conn,$sql);
         $datas2=array();
         $isResult = false;
@@ -59,8 +59,8 @@
 
         $positiveProposition ="";
         $positiveDescription = "";
-        $sql = 'SELECT proposition, description FROM tbl_dynamism
-        WHERE tbl_dynamism.id_fcc = '.$id_fcc.' AND tbl_dynamism.orientation = 0;';
+        $sql = "SELECT proposition, description FROM tbl_dynamism
+        WHERE tbl_dynamism.id_fcc = '".$id_fcc."' AND tbl_dynamism.orientation = '0';";
         $result = mysqli_query($conn,$sql);
         $datas2=array();
         $isResult = false;
@@ -89,8 +89,8 @@
 
         $negativeProposition = "";
         $negativeDescription ="";
-        $sql = 'SELECT proposition, description FROM tbl_dynamism
-        WHERE tbl_dynamism.id_fcc = '.$id_fcc.' AND tbl_dynamism.orientation = 1;';
+        $sql = "SELECT proposition, description FROM tbl_dynamism
+        WHERE tbl_dynamism.id_fcc = '".$id_fcc."' AND tbl_dynamism.orientation = '1';";
         $result = mysqli_query($conn,$sql);
         $datas2=array();
         $isResult = false;
@@ -119,8 +119,8 @@
 
         $negativeProposition = "";
         $negativeDescription ="";
-        $sql = 'SELECT proposition, description FROM tbl_dynamism
-        WHERE tbl_dynamism.id_fcc = '.$id_fcc.' AND tbl_dynamism.orientation = 1;';
+        $sql = "SELECT proposition, description FROM tbl_dynamism
+        WHERE tbl_dynamism.id_fcc = '".$id_fcc."' AND tbl_dynamism.orientation = '1';";
         $result = mysqli_query($conn,$sql);
         $datas2=array();
         $isResult = false;

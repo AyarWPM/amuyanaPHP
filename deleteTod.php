@@ -31,6 +31,8 @@
   // delete container1
   if(!mysqli_query($conn,$sqlDC1)){
     echo "Error deleting c1.<br>";
+    echo $sqlDC1;
+    echo "<br>";
   }
 
   // delete tod
@@ -42,6 +44,8 @@
   // delete container0
   if(!mysqli_query($conn,$sqlDC0)){
     echo "Error deleting c0.<br>";
+    echo $sqlDC0;
+    echo "<br>";
   }
   
   ?>

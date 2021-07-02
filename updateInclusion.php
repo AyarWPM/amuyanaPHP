@@ -23,7 +23,7 @@ include('includes/dbh.inc.php');
       } else if (mysqli_num_rows($result) == 0){
         echo "no results. creating new inclusion";
         $sqlNewInclusion = "INSERT INTO tbl_inclusion (id_tod, id_particular, id_general) 
-                            VALUES ('".$id_tod."','".$id_particular."','".$id_general."')";
+                            VALUES ('".$id_tod."','".$id_particular."','".$id_general."');";
         if(!mysqli_query($conn,$sqlNewInclusion)){
           echo "mysql error, place 3";
         }
