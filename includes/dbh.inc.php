@@ -1,12 +1,8 @@
 <?php
   $dbServername = "localhost";
-  $dbUsername = "amuyana";
-  $dbPassword = "prharcopos";
+  $dbUsername = "";
+  $dbPassword = "";
   $dbName = "amuyana";
-  // $dbServername = "amuyana.net";
-  // $dbUsername = "coxpueqo_client";
-  // $dbPassword = "coxpueqo_password";
-  // $dbName = "coxpueqo_amuyana";
 
 $conn = mysqli_connect($dbServername,$dbUsername,$dbPassword,$dbName);
   if(!$conn) {
