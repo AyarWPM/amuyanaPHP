@@ -138,7 +138,7 @@ ob_start(); // to make header work
     echo '<div class="canvas" id="canvas">';
     
     if(!isset($option)){
-      echo "To begin open an existing table or create a new one.";
+      echo '<div class="message">To begin open an existing table or create a new one.</div>';
     } else if (isset($option) && ($option=="Open" || $option=="New" || $option=="Delete")){
       
       getTree($id_container_0);
@@ -170,4 +170,3 @@ ob_start(); // to make header work
   }
 ?>
   </div>  <!-- table-->
-<?php include 'includes/footer.php'?>
