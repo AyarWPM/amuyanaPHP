@@ -132,9 +132,17 @@ img#logo{
   padding:10px;
 }
 
-.select{
+.select {
   padding:3px;
-  background: transparent;
+  background: #293241;
+}
+.selectForm > *{
+  padding: 2px 5px;
+  margin: 2px 5px;
+}
+
+.selectForm:last-child{
+  color:white;
 }
 
 .canvas{

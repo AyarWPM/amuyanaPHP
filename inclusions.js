@@ -8,8 +8,12 @@ var listContainer2s;
 var isSelectedDyn = false;
 var selectedDynDiv;
 var selectedDynDivId;
+var isEditMode=false;
 
 function clickDynamism(todId, dynDivId){
+  if(!document.getElementById("editModeChBx").checked){
+    return;
+  }
   var dynDiv = document.getElementById(dynDivId);
   dynDiv.setAttribute("style","background-color: rgba(0, 255, 155); border-radius:10px;");
   if(window.isSelectedDyn){
@@ -192,6 +196,9 @@ function mouseLeaveDynamism(){
 
 
 function mouseOverBranch(branchId){
+  if(!document.getElementById("editModeChBx").checked){
+    return;
+  }
   var id = branchId.split("branch").pop();
   var addInBranchId = "addInBranchButton"+id;
   var addInBranchDiv = document.getElementById(addInBranchId);
@@ -207,10 +214,13 @@ function mouseLeaveBranch(branchId){
   var addInBranchId = "addInBranchButton"+id;
   var addInBranchDiv = document.getElementById(addInBranchId);
   addInBranchDiv.setAttribute("style", "transition:visibility 0.5s linear,opacity 0.5s linear;"); 
-
 }
 
 function mouseOverAddInBranchButton(buttonId){
+  var c = document.getElementById("editModeChBx");
+  if(!c.checked){
+    return;
+  }
   var id = buttonId.split("addInBranchButton").pop();
   branchId = "branch"+id;
   var branchDiv = document.getElementById(branchId);

@@ -110,7 +110,7 @@ include 'includes/header.php';
     global $id_container_0;
     
     echo '<div class="select">';
-    echo '<form action="tables.php" method="get">';
+    echo '<form class="selectForm" action="tables.php" method="get">';
     echo '<select name="id">';
     $sql = "SELECT * FROM tbl_tod;";
     
@@ -135,8 +135,9 @@ include 'includes/header.php';
     }
     echo '</select>';
     echo '<input type="submit" value="Open" name="option">';
-    echo '<input type="submit" value="New" name="option">';
-    echo '<input type="submit" value="Delete" name="option">';
+    echo '<input type="submit" id="newTableBtn" value="New" name="option">';
+    echo '<input type="submit" id="deleteTableBtn" value="Delete" name="option">';
+    echo 'Enable edit mode <input type="checkbox" id="editModeChBx" value="Enable" onclick="toggleEditMode()">';
     echo '</form>';
     echo '</div>';
   }
@@ -188,9 +189,19 @@ include 'includes/header.php';
       }
       $inclusionsArrayEncoded = json_encode($datas);
       echo '<div id="inclusionsArrayDiv" style="display:none;">'.$inclusionsArrayEncoded.'</div>';
-      echo '<script>setLists()</script>';
+      echo '<script>setLists();</script>';
     }
     echo '</div>'; // canvas
   }
+  echo '<script>
+    var checkBox = document.getElementById("editModeChBx");
+    if(checkBox.checked){
+      $(deleteTableBtn).fadeIn(0);
+      $(newTableBtn).fadeIn(0);
+    } else {
+      $(deleteTableBtn).fadeOut(0);
+      $(newTableBtn).fadeOut(0);
+    }
+  </script>';
   echo '</div>'; // table
 ?>

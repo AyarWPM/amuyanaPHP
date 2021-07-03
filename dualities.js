@@ -1,4 +1,8 @@
 function editDuality(divId, container2Id, currentTable){
+  var c = document.getElementById("editModeChBx");
+  if(!c.checked){
+    return;
+  }
   var id = divId.split("dual").pop();
   $("#dualityEditor").load("dualityEditor.php", {
     id_fcc: id,
@@ -29,4 +33,21 @@ function confirmDelete(){
 function cancelDelete(){
   $("#confirmDeleteDuality").hide();
   $("#deleteDualityBtn").show();
+}
+
+function toggleEditMode(){
+  var d = document.getElementById("deleteTableBtn");
+  var n = document.getElementById("newTableBtn");
+  var checkBox = document.getElementById("editModeChBx");
+  if(checkBox.checked){
+    var a = alert("With great power comes great responsibility.");
+    isEditMode = true;
+    $(d).fadeIn();
+    $(n).fadeIn();
+  } else {
+    isEditMode = false;
+    $(d).fadeOut();
+    $(n).fadeOut();
+  }
+  
 }
