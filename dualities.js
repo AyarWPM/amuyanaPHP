@@ -36,7 +36,7 @@ function cancelDelete(){
 }
 
 function toggleEditMode(showMessage){
-  var d = document.getElementById("deleteTableBtn");
+  
   var n = document.getElementById("newTableBtn");
   var checkBox = document.getElementById("editModeChBx");
   if(checkBox.checked){
@@ -44,30 +44,14 @@ function toggleEditMode(showMessage){
       alert("With great power comes great responsibility.");
     }
     isEditMode = true;
-    $(d).fadeIn();
-    $(n).fadeIn();
+    $("#deleteTableBtn").fadeIn();
+    $("#newTableBtn").fadeIn();
+    $("#hint").fadeIn();
   } else {
     isEditMode = false;
-    $(d).fadeOut();
-    $(n).fadeOut();
+    $("#deleteTableBtn").fadeOut();
+    $("#newTableBtn").fadeOut();
   }
   
-  function hintListener(){
-    var ev = e || event;
-    if(ev.keyCode == 13 && ev.ctrlKey) {
-      var checkBox = document.getElementById("editModeChBx");
-      checkBox.checked = true;
-      if(checkBox.checked){
-        isEditMode = true;
-        $("#deleteTableBtn").fadeIn();
-        $("#newTableBtn").fadeIn();
-        $("#hint").fadeIn();
-      } else {
-        isEditMode = false;
-        $("#deleteTableBtn").fadeOut();
-        $("#newTableBtn").fadeOut();
-        $("#hint").fadeOut();
-      }
-    }
-  }
+  
 }

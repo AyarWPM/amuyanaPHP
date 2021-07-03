@@ -135,9 +135,9 @@ include 'includes/header.php';
     echo '<input type="submit" value="Open" name="option">';
     echo '<input type="submit" id="newTableBtn" value="New" name="option">';
     echo '<input type="submit" id="deleteTableBtn" value="Delete" name="option">';
-    echo 'Enable edit mode <input type="checkbox" id="editModeChBx" value="Enable" onclick="toggleEditMode(1)">';
-    echo '<span id="hint">(shortcut: ctrl+enter)</span>';
     echo '</form>';
+    echo '<span id="hintBox">Enable edit mode</span><input type="checkbox" id="editModeChBx" value="Enable" onclick="toggleEditMode(1)">';
+    echo '<span id="hint">(shortcut: ctrl+enter)</span>';
     echo '</div>';
   }
 

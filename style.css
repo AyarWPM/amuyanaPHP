@@ -124,9 +124,17 @@ img#logo{
   flex-direction: column;
   flex-wrap: nowrap;
 }
-
+#hintBox{
+  display:flex;
+  align-items: center;
+  color:white;
+  padding:0px 5px;
+}
 #hint{
+  display:flex;
+  align-items: center;
   font-size: 12px;
+  color:white;
 }
 
 .message{
@@ -138,17 +146,18 @@ img#logo{
 }
 
 .select {
+  display: flex;
   padding:3px;
   background-color: rgb(58, 68, 87);
+
 }
+
+
 .selectForm > *{
   padding: 2px 5px;
   margin: 2px 5px;
 }
 
-.selectForm:last-child{
-  color:white;
-}
 
 .canvas {
   display:grid;
