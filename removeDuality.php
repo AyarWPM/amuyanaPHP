@@ -340,21 +340,7 @@ if(!$result){
       } 
     }
   }
-
-  // echo "Variable test is being declared... ";
-  // $test;
-  // echo "<br>is it set? ";
-  // echo isset($test) ? "true" : "false";
-  // echo "<br>so it shouldn't be true or false, which is it?: ";
-  // echo $test ? "true" : "false";
-  // echo "<br> now let's assign the false value...";
-  // $test = false;
-  // echo "<br> it still gives false (value:";
-  // echo $test ? "true" : "false";
-  // echo ")<br> but now the isset gives true (value:";
-  // echo isset($test) ? "true" : "false";
-  // echo ")";
-
+  
   // condition6: check if it is the last FCC of the branch
   //              i.e. if its branch has only one subBranch
   //    yes: check condition 4

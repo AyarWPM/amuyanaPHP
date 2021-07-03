@@ -35,12 +35,14 @@ function cancelDelete(){
   $("#deleteDualityBtn").show();
 }
 
-function toggleEditMode(){
+function toggleEditMode(showMessage){
   var d = document.getElementById("deleteTableBtn");
   var n = document.getElementById("newTableBtn");
   var checkBox = document.getElementById("editModeChBx");
   if(checkBox.checked){
-    var a = alert("With great power comes great responsibility.");
+    if(showMessage == 1){
+      alert("With great power comes great responsibility.");
+    }
     isEditMode = true;
     $(d).fadeIn();
     $(n).fadeIn();
@@ -50,4 +52,22 @@ function toggleEditMode(){
     $(n).fadeOut();
   }
   
+  function hintListener(){
+    var ev = e || event;
+    if(ev.keyCode == 13 && ev.ctrlKey) {
+      var checkBox = document.getElementById("editModeChBx");
+      checkBox.checked = true;
+      if(checkBox.checked){
+        isEditMode = true;
+        $("#deleteTableBtn").fadeIn();
+        $("#newTableBtn").fadeIn();
+        $("#hint").fadeIn();
+      } else {
+        isEditMode = false;
+        $("#deleteTableBtn").fadeOut();
+        $("#newTableBtn").fadeOut();
+        $("#hint").fadeOut();
+      }
+    }
+  }
 }

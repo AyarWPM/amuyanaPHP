@@ -108,12 +108,10 @@ include 'includes/header.php';
     global $conn;
     global $currentTable;
     global $id_container_0;
-    
     echo '<div class="select">';
     echo '<form class="selectForm" action="tables.php" method="get">';
     echo '<select name="id">';
     $sql = "SELECT * FROM tbl_tod;";
-    
     $result = mysqli_query($conn,$sql);
     $datas=array();
     $isResult = false;
@@ -137,7 +135,8 @@ include 'includes/header.php';
     echo '<input type="submit" value="Open" name="option">';
     echo '<input type="submit" id="newTableBtn" value="New" name="option">';
     echo '<input type="submit" id="deleteTableBtn" value="Delete" name="option">';
-    echo 'Enable edit mode <input type="checkbox" id="editModeChBx" value="Enable" onclick="toggleEditMode()">';
+    echo 'Enable edit mode <input type="checkbox" id="editModeChBx" value="Enable" onclick="toggleEditMode(1)">';
+    echo '<span id="hint">(shortcut: ctrl+enter)</span>';
     echo '</form>';
     echo '</div>';
   }
@@ -170,9 +169,7 @@ include 'includes/header.php';
       echo '<div id="container0sArrayDiv" style="display:none;">'.$container0sArrayEncoded.'</div>';
       echo '<div id="container1sArrayDiv" style="display:none;">'.$container1sArrayEncoded.'</div>';
       echo '<div id="container2sArrayDiv" style="display:none;">'.$container2sArrayEncoded.'</div>';
-      
       $dynArrayEncoded = json_encode($dynArray); // move after getTrunk() in code.php after dvlping delete Tod
-
       echo '<div id="dynamismsArrayDiv" style="display:none;">'.$dynArrayEncoded.'</div>';
 
       // get data of inclusions, encode
@@ -193,15 +190,27 @@ include 'includes/header.php';
     }
     echo '</div>'; // canvas
   }
-  echo '<script>
-    var checkBox = document.getElementById("editModeChBx");
-    if(checkBox.checked){
-      $(deleteTableBtn).fadeIn(0);
-      $(newTableBtn).fadeIn(0);
-    } else {
-      $(deleteTableBtn).fadeOut(0);
-      $(newTableBtn).fadeOut(0);
-    }
-  </script>';
   echo '</div>'; // table
 ?>
+<script>
+  var checkBox = document.getElementById("editModeChBx");
+  if(checkBox.checked){
+    $("#deleteTableBtn").fadeIn(0);
+    $("#newTableBtn").fadeIn(0);
+    $("#hint").fadeIn(0);
+  } else {
+    $("#deleteTableBtn").fadeOut(0);
+    $("#newTableBtn").fadeOut(0);
+    $("#hint").fadeOut(0);
+  }
+  window.onload = function() {
+   document.getElementsByTagName('body')[0].onkeyup = function(e) { 
+      var ev = e || event;
+      if(ev.keyCode == 13 && ev.ctrlKey) {
+        var checkBox = document.getElementById("editModeChBx");
+        checkBox.checked = true;
+        toggleEditMode(0);
+      }
+   }
+};
+</script>
