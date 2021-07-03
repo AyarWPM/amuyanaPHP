@@ -30,6 +30,7 @@ body {
 .home {
   flex:1;
   padding: 10px;
+  overflow: auto;
 }
 
 .footer {
@@ -138,11 +139,23 @@ img#logo{
 }
 
 .message{
-  color:white;
-  background:rgba(255, 255, 255, 0.2);
-  border-radius:30px;
-  padding:10px;
-  height: 30px;
+  color: rgb(26, 26, 26);
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 30px;
+  padding: 25px;
+  height: max-content;
+  width: max-content;
+  position: relative;
+  left: 50%;
+  translate: -50% 0;
+  margin: 20px 0px;
+  min-width:300px;
+  max-width: 800px;
+}
+
+.message p {
+  padding:3px 1px;
+  white-space: break-spaces;
 }
 
 .select {
