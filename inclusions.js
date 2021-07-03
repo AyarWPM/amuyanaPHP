@@ -262,12 +262,12 @@ function deleteTod(tod){
   var sqlContainer0in1s = "";
   var len = listContainer0s.length;
   if(listContainer0s.length>1){
-    sqlContainer0in1s = "DELETE FROM tbl_container_0_in_1 AS c0i1 WHERE ";
+    sqlContainer0in1s = "DELETE FROM tbl_container_0_in_1 WHERE ";
     listContainer0s.forEach((item, i) => {
       if(i<len-1){
-        sqlContainer0in1s= sqlContainer0in1s+"c0i1.id_container_0 = '"+item+"' OR ";
+        sqlContainer0in1s= sqlContainer0in1s+"tbl_container_0_in_1.id_container_0 = '"+item+"' OR ";
       } else if (i==len-1){
-        sqlContainer0in1s=sqlContainer0in1s+"c0i1.id_container_0 = '"+item+"';";
+        sqlContainer0in1s=sqlContainer0in1s+"tbl_container_0_in_1.id_container_0 = '"+item+"';";
       }
     });
   }
@@ -276,12 +276,12 @@ function deleteTod(tod){
   var sqlContainer0in2s = "";
   var len = listContainer0s.length;
   if(listContainer0s.length>1){
-    sqlContainer0in2s = "DELETE FROM tbl_container_0_in_2 AS c0i2 WHERE ";
+    sqlContainer0in2s = "DELETE FROM tbl_container_0_in_2 WHERE ";
     listContainer0s.forEach((item, i) => {
       if(i<len-1){
-        sqlContainer0in2s= sqlContainer0in2s+"c0i2.id_container_0 = '"+item+"' OR ";
+        sqlContainer0in2s= sqlContainer0in2s+"tbl_container_0_in_2.id_container_0 = '"+item+"' OR ";
       } else if (i==len-1){
-        sqlContainer0in2s=sqlContainer0in2s+"c0i2.id_container_0 = '"+item+"';";
+        sqlContainer0in2s=sqlContainer0in2s+"tbl_container_0_in_2.id_container_0 = '"+item+"';";
       }
     });
   }
@@ -311,13 +311,13 @@ function deleteTod(tod){
   // container2
   var sqlContainer2s = "";
   if(listContainer2s!=null){
-    sqlContainer2s = "DELETE FROM tbl_container_2 AS c2 WHERE ";
+    sqlContainer2s = "DELETE FROM tbl_container_2 WHERE ";
     var len = listContainer2s.length;
     listContainer2s.forEach((item, i) => {
       if(i<len-1){
-        sqlContainer2s= sqlContainer2s+"c2.id_container_2 = '"+item+"' OR ";
+        sqlContainer2s= sqlContainer2s+"tbl_container_2.id_container_2 = '"+item+"' OR ";
       } else if (i==len-1){
-        sqlContainer2s=sqlContainer2s+"c2.id_container_2 = '"+item+"';";
+        sqlContainer2s=sqlContainer2s+"tbl_container_2.id_container_2 = '"+item+"';";
       }
     });
   } 
