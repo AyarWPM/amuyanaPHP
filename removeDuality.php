@@ -66,8 +66,8 @@ if(!$result){
   }
    
   // condition3: check if there are inclusions between itself and the branches' FCCs
-  //    yes: inform user, abort.
-  //    no: check condition4
+  //    true: check condition4
+  //    false: inform user, abort.
   $condition3;
   $condition3a;
   $condition3b;
@@ -414,7 +414,7 @@ if(!$result){
       if(!mysqli_query($conn,$sqlDeleteTodFcc)){
         echo "mysql error on deleting subBranches and branches.<br>";
       } else {
-        echo "Duality removed.";
+        echo "Duality removed.<br>";
         refresh(0);
       }
     }
@@ -426,10 +426,11 @@ if(!$result){
 
   function refresh($sec){
     global $table;
-    $h = "refresh:".$sec.";url=tables.php?id=".$table."&option=Open";
-    echo "Refreshing the page in ".$sec." seconds...";
-    header($h);
-    exit();
+    $secs =$sec*1000;
+    $url ="tables.php?id=".$table."&option=Open";
+    $script = 'setTimeout(function(){ location.replace("'.$url.'");}, '.$secs.');';
+    echo "Refreshing in ".$sec." seconds...";
+    echo '<script>'.$script.'</script>';
   }
   
   ?>
