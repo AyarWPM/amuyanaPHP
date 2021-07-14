@@ -11,6 +11,13 @@ body {
   background-size: cover;
   overflow: hidden;
 }
+/* for export only */
+.todContainer{
+  display:flex;
+  height:100%;
+  flex: auto;
+  flex-wrap: nowrap;
+}
 .stage{
   display: flex;
   flex-direction: column;
@@ -99,6 +106,24 @@ img#logo{
   border:1px solid black;
 }
 /* TABLES */
+.zoom{
+  display:flex;
+  flex-direction: column;
+  position:fixed;
+  top: 20px;
+  left:20px;
+  border:2px solid black;
+  border-radius:20px;
+  background:rgba(41, 50, 65, 1);
+  z-index: 1000;
+}
+.zoomButton{
+  font-size: large;
+  margin:4px;
+  width:25px;
+  height:25px;
+  border-radius:25px;
+}
 .tables{
   display:flex;
   cursor: default;
@@ -160,6 +185,10 @@ textarea {
   align-items: center;
   justify-content: normal;
   padding: 20px;
+  /* transform: scale(1,0,0,2,0,0); */
+  transform: scale(1);
+  transition: "all 0.5s"
+  
 }
 #dualityEditor{
   position:fixed;

@@ -11,17 +11,6 @@
 <title>Amuya&ntilde;a - Contradictory logic systems</title>
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="stylesheet" type="text/css" href="includes/jquery-ui-1.12.1.custom/jquery-ui.css">
-<script>
-function saveText(type,sql_id,html_id){
-  var xr = new XMLHttpRequest();
-  var url = "saveData.php";
-  var text = document.getElementById(html_id).innerHTML;
-  var vars = "type="+type+"&id="+id+"&text="+text;
-  xr.open ("POST", url, true);
-  xr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xr.send(vars);
-}
-</script>
 <script src="jquery-3.6.0.js"></script>
 <script src="includes/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 <script src="inclusions.js"></script>
