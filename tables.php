@@ -28,7 +28,17 @@ include 'includes/header.php';
     getTableSelector();
     getCanvas();
   } else {
-    if($option == "Open"){
+    if($option== "Rename"){
+      $label = $_GET['label'];
+      $sqlUpdateTable = "UPDATE tbl_tod SET label ='".$label."' 
+                        WHERE id_tod = '".$currentTable."';";
+      if(!mysqli_query($conn,$sqlUpdateTable)){
+        echo "Error at updating table.<br>";
+      }
+      $url = "tables.php?id=".$currentTable."&option=Open";
+      header( "refresh:0; url=$url" );
+      exit();
+    } else if($option == "Open"){
       getTableSelector();
       if(isset($currentTable)){
         getCanvas();
@@ -108,33 +118,31 @@ include 'includes/header.php';
     global $conn;
     global $currentTable;
     global $id_container_0;
+    $tableName = "";
     echo '<div class="select">';
     echo '<form class="selectForm" action="tables.php" method="get">';
     echo '<select name="id">';
     $sql = "SELECT * FROM tbl_tod;";
     $result = mysqli_query($conn,$sql);
-    $datas=array();
-    $isResult = false;
-
     if(mysqli_num_rows($result) > 0){
-      $isResult = true;
       while($row=mysqli_fetch_assoc($result)){
-        $datas[] = $row;
+        if($row["id_tod"]==$currentTable){
+          $id_container_0 = $row['id_container_0'];
+          $tableName = $row['label'];
+          echo '<option value="'.$row["id_tod"].'" selected >'.$row["label"].'</option>';
+        } else {
+          echo '<option value="'.$row["id_tod"].'" >'.$row["label"].'</option>';
+        }
       }
     }
 
-    foreach($datas as $data){
-      if($data["id_tod"]==$currentTable){
-        $id_container_0 = $data['id_container_0'];
-        echo '<option value="'.$data["id_tod"].'" selected >'.$data["label"].'</option>';
-      } else {
-        echo '<option value="'.$data["id_tod"].'" >'.$data["label"].'</option>';
-      }
-    }
     echo '</select>';
     echo '<input type="submit" value="Open" name="option">';
     echo '<input type="submit" id="newTableBtn" value="New" name="option">';
     echo '<input type="submit" id="deleteTableBtn" value="Delete" name="option">';
+    echo '<input id="renameTableTxt" name="label" value="'.$tableName.'">';
+    echo '<input type="submit" id="renameTableBtn" value="Rename" name="option">';
+    
     echo '</form>';
     echo '<span id="hintBox">Enable edit mode</span><input type="checkbox" id="editModeChBx" value="Enable" onclick="toggleEditMode(1)">';
     echo '<span id="hint">(shortcut: ctrl+enter)</span>';
@@ -197,10 +205,14 @@ include 'includes/header.php';
   if(checkBox.checked){
     $("#deleteTableBtn").fadeIn(0);
     $("#newTableBtn").fadeIn(0);
+    $("#renameTableBtn").fadeIn(0);
+    $("#renameTableTxt").fadeIn(0);
     $("#hint").fadeIn(0);
   } else {
     $("#deleteTableBtn").fadeOut(0);
     $("#newTableBtn").fadeOut(0);
+    $("#renameTableBtn").fadeOut(0);
+    $("#renameTableTxt").fadeOut(0);
     $("#hint").fadeOut(0);
   }
   window.onload = function() {

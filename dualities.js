@@ -47,10 +47,14 @@ function toggleEditMode(showMessage){
     $("#deleteTableBtn").fadeIn();
     $("#newTableBtn").fadeIn();
     $("#hint").fadeIn();
+    $("#renameTableBtn").fadeIn();
+    $("#renameTableTxt").fadeIn();
   } else {
     isEditMode = false;
     $("#deleteTableBtn").fadeOut();
     $("#newTableBtn").fadeOut();
+    $("#renameTableBtn").fadeOut();
+    $("#renameTableTxt").fadeOut();
   }
   
   
