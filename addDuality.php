@@ -1,66 +1,180 @@
 <?php
+// globals meta
   include('includes/dbh.inc.php');
   $table = $_POST['table'];
   $container1Id = $_POST['container1Id'];
-  $duality = $_POST['duality'];
+  $idFcc = $_POST['duality'];
+  $newIdFcc;
+  //globals
+  $fccName;
+  $fccDescription;
+  $element;
+  $antiElement;
+  $PDP;
+  $PDD;
+  $NDP;
+  $NDD;
+  $SDP;
+  $SDD;
 
-  if(empty($duality)){
-    $newId;
+  if($idFcc>0) {
+    $sql = "SELECT name, description FROM tbl_fcc WHERE tbl_fcc.id_fcc = ".$idFcc.";";
+    $result = mysqli_query($conn,$sql);
+    if($result){
+      if(mysqli_num_rows($result) > 0){
+        while($row=mysqli_fetch_assoc($result)){
+          $fccName= $row['name'];
+          $fccDescription = $row['description'];
+        }
+      }
+    } else {
+      echo "mysql error";
+    }
+
+    // INSERT IN TABLE COPY
+    $sql = "INSERT INTO tbl_fcc (name, description) VALUES ('".$fccName."', '".$fccDescription."');";
+    if(!mysqli_query($conn,$sql)){
+      echo "Fcc NOT created.";
+    } else {
+      $newIdFcc = mysqli_insert_id($conn);
+    }
+    copyAttributes();
+  } else if($idFcc==0){
+    // create attributes
     $fccName = "New Duality ";
     $fccDescription = "Add a description.";
     $sqlNewFcc = "INSERT INTO tbl_fcc (name, description) VALUES ('".$fccName."', '".$fccDescription."');";
-    global $conn;
     if(!mysqli_query($conn,$sqlNewFcc)){
       echo "Fcc NOT created.";
     } else {
-      $newId = mysqli_insert_id($conn);
-      $duality = mysqli_insert_id($conn);
-      // update with new FCC
-      $fccName = $fccName.$newId;
-      $sqlUpdateFcc = "UPDATE tbl_fcc SET name = '".$fccName."' WHERE id_fcc='".$newId."';";
+      $newIdFcc = mysqli_insert_id($conn);
+      // update with new FCC name
+      $fccName = $fccName.$newIdFcc;
+      $sqlUpdateFcc = "UPDATE tbl_fcc SET name = '".$fccName."' WHERE id_fcc='".$newIdFcc."';";
       if(!mysqli_query($conn,$sqlUpdateFcc)){
         echo "Fcc NOT updated.<br>";
       }
     }
+    setNewAttributes();
+  } 
+  insertValues();
+  createContainers();
 
-    $element = "e".$newId;
-    $antiElement = "e".$newId;
-    $sqlNewElement = "INSERT INTO tbl_element (symbol, polarity, id_fcc) VALUES ('".$element."',0,'".$newId."');";
-    $sqlNewAntiElement = "INSERT INTO tbl_element (symbol, polarity, id_fcc) VALUES ('".$antiElement."',1,'".$newId."');";
+  function copyAttributes(){
+    global $conn;
+    global $idFcc;
+    global $element;
+    global $antiElement;
+    global $PDP;
+    global $PDD;
+    global $NDP;
+    global $NDD;
+    global $SDP;
+    global $SDD;
+
+    $sql = "SELECT symbol, polarity FROM tbl_element WHERE tbl_element.id_fcc = ".$idFcc.";";
+    $result = mysqli_query($conn,$sql);
+    if($result){
+      if(mysqli_num_rows($result) > 0){
+        while($row=mysqli_fetch_assoc($result)){
+          if($row['polarity']==0) {
+            echo "row ".$row['symbol'];
+            $element = $row['symbol'];
+          } else if($row['polarity']==1){
+            $antiElement = $row['symbol'];
+          }
+        }
+      }
+    } else {
+      echo "mysql error";
+    }    
+
+    $sql = "SELECT proposition, description, orientation FROM tbl_dynamism WHERE tbl_dynamism.id_fcc = ".$idFcc.";";
+    $result = mysqli_query($conn,$sql);
+    if($result){
+      if(mysqli_num_rows($result) > 0){
+        while($row=mysqli_fetch_assoc($result)){
+          if($row['orientation']==0) {
+            $PDP = $row['proposition'];
+            $PDD = $row['description'];
+          } else if($row['orientation']==1){
+            $NDP = $row['proposition'];
+            $NDD = $row['description'];
+          } else if($row['orientation']==2){
+            $SDP = $row['proposition'];
+            $SDD = $row['description'];
+          }
+        }
+      }
+    } else {
+      echo "mysql error";
+    } 
+  }
+
+  function setNewAttributes(){
+    global $newIdFcc;
+    global $element;
+    global $antiElement;
+    global $PDP;
+    global $PDD;
+    global $NDP;
+    global $NDD;
+    global $SDP;
+    global $SDD;
+
+    $element = "e".$newIdFcc;
+    $antiElement = "e".$newIdFcc;
+    $PDP = "Positive orientation of Duality ".$newIdFcc;
+    $PDD = "Add a description.";
+    $NDP = "Negative orientation of Duality ".$newIdFcc;
+    $NDD = "Add a description.";
+    $SDP = "Symmetric orientation of Duality ".$newIdFcc;
+    $SDD = "Add a description.";
+  }
+
+  function insertValues(){
+    global $conn;
+    global $newIdFcc;
+    global $element;
+    global $antiElement;
+    global $PDP;
+    global $PDD;
+    global $NDP;
+    global $NDD;
+    global $SDP;
+    global $SDD;
+
+    $sqlNewElement = "INSERT INTO tbl_element (symbol, polarity, id_fcc) VALUES ('".$element."',0,'".$newIdFcc."');";
+    $sqlNewAntiElement = "INSERT INTO tbl_element (symbol, polarity, id_fcc) VALUES ('".$antiElement."',1,'".$newIdFcc."');";
     if(!mysqli_query($conn,$sqlNewElement)){
       echo "Element NOT created.<br>";
     }
     if(!mysqli_query($conn,$sqlNewAntiElement)){
       echo "Anti-Element NOT created.<br>";
     }
-  
-    $PDP = "Positive orientation of Duality ".$newId;
-    $PDD = "Add a description.";
     $sqlNewPD = "INSERT INTO tbl_dynamism (orientation, proposition, description, id_fcc) 
-    VALUES ('0','".$PDP."','".$PDD."','".$newId."');";
+    VALUES ('0','".$PDP."','".$PDD."','".$newIdFcc."');";
     if(!mysqli_query($conn,$sqlNewPD)){
       echo "Positive Dynamism NOT created.<br>";
-    }
-  
-    $NDP = "Negative orientation of Duality ".$newId;
-    $NDD = "Add a description.";
+    }    
     $sqlNewND = "INSERT INTO tbl_dynamism (orientation, proposition, description, id_fcc) 
-    VALUES ('1','".$NDP."','".$NDD."','".$newId."');";
+    VALUES ('1','".$NDP."','".$NDD."','".$newIdFcc."');";
     if(!mysqli_query($conn,$sqlNewND)){
       echo "Negative Dynamism NOT created.<br>";
-    }
-  
-    $SDP = "Symmetric orientation of Duality ".$newId;
-    $SDD = "Add a description.";
+    }    
     $sqlNewSD = "INSERT INTO tbl_dynamism (orientation, proposition, description, id_fcc) 
-    VALUES ('2','".$SDP."','".$SDD."','".$newId."');";
+    VALUES ('2','".$SDP."','".$SDD."','".$newIdFcc."');";
     if(!mysqli_query($conn,$sqlNewSD)){
       echo "Symmetric Dynamism NOT created.<br>";
     }
-  } else {
-    //$newId = $_POST["duality"];
   }
 
+  function createContainers(){
+    global $conn;
+    global $newIdFcc;
+    global $table;
+    global $container1Id;
+    
   // condition0: if it is an empty branch, create left and right trunks for the branch and container1s inside
   $sqlCondition0 = "SELECT id_container_2 FROM tbl_container_2 WHERE tbl_container_2.id_container_1 = '".$container1Id."';";
   $results = mysqli_query($conn,$sqlCondition0);
@@ -117,7 +231,7 @@
 
   // create container2
   $sqlContainer2 = "INSERT INTO tbl_container_2 (id_fcc, id_container_1, sub_branch_order) 
-                    VALUES ('".$duality."','".$container1Id."','0');";
+                    VALUES ('".$newIdFcc."','".$container1Id."','0');";
   if(!mysqli_query($conn,$sqlContainer2)){
     echo "Container2 NOT created.<br>";
   }
@@ -172,12 +286,11 @@
   }
 
   $sqlTodFcc = "INSERT INTO tbl_tod_has_fcc (id_tod, id_fcc)  
-                VALUES ('".$table."', '".$duality."');";
+                VALUES ('".$table."', '".$newIdFcc."');";
   if(!mysqli_query($conn,$sqlTodFcc)){
     echo "mysql error 2.";
   }
   $url ="tables.php?id=".$table."&option=Open";
   echo '<script>location.replace("'.$url.'");</script>';
-  // header("refresh:1; url=$url");
-  // exit();
+  }
 ?>
