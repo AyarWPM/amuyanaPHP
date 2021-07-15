@@ -269,7 +269,7 @@
     echo '<div class="fruitHeader">';
     // By convention, id = type [name,positive,...]+id_fcc
     global $currentTable;
-    echo '<div id="dual'.$id_fcc.'" onclick="editDuality(this.id ,'.$id_subBranch.', '.$currentTable.')" class="fruitName">'.$name.'</div><div class="formulation"> ('.$element.'&middot;'.$antiElement.')</div>';
+    echo '<div id="dual'.$id_fcc.'" onclick="editDuality(this.id ,'.$id_subBranch.', '.$currentTable.')" class="fruitName"  title="'.$description.'" >'.$name.'</div><div class="formulation"> ('.$element.'&middot;'.$antiElement.')</div>';
     echo '</div>';
     echo '<div class="fruitBracket">';
     echo '<img src="includes/bracket.png" alt="bracket">';

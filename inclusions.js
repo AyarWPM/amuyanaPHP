@@ -8,7 +8,6 @@ var listContainer2s;
 var isSelectedDyn = false;
 var selectedDynDiv;
 var selectedDynDivId;
-var isEditMode=false;
 
 function clickDynamism(todId, dynDivId){
   if(!document.getElementById("editModeChBx").checked){
