@@ -1,43 +1,89 @@
 <?php
   $currentPage="dualities";
   include 'includes/header.php';
+  $fccs=array();
+  $tods=array();
+  $todHasFccs=array();
+  $sql = "SELECT * FROM tbl_fcc;";
+  $result = mysqli_query($conn,$sql);
+  if(mysqli_num_rows($result) > 0){
+    $isResult = true;
+    while($row=mysqli_fetch_assoc($result)){
+      $fccs[] = $row;
+    }
+  }
+
+  $sql = "SELECT * FROM tbl_tod;";
+  $result = mysqli_query($conn,$sql);
+  if(mysqli_num_rows($result) > 0){
+    $isResult = true;
+    while($row=mysqli_fetch_assoc($result)){
+      $tods[] = $row;
+    }
+  }
+
+  $sql = "SELECT * FROM tbl_tod_has_fcc;";
+  $result = mysqli_query($conn,$sql);
+  if(mysqli_num_rows($result) > 0){
+    $isResult = true;
+    while($row=mysqli_fetch_assoc($result)){
+      $todHasFccs[] = $row;
+    }
+  }
+  
   echo '<div class="dualities">';
-    // global $conn;
-    $sql = "SELECT * FROM tbl_fcc;";
-    $result = mysqli_query($conn,$sql);
-    $datas=array();
-    $isResult = false;
-    if(mysqli_num_rows($result) > 0){
-      $isResult = true;
-      while($row=mysqli_fetch_assoc($result)){
-        $datas[] = $row;
+    echo '<div class="dualitiesList">';
+    foreach($tods as $tod){
+      echo '<div class="dualitiesItemTitle"><a href="tables.php?id='.$tod["id_tod"].'&option=Open">'.$tod["label"].'</a></div>';
+      foreach($todHasFccs as $thf){
+        if($thf['id_tod']==$tod['id_tod']){
+          foreach($fccs as $fcc){
+            if($thf['id_fcc']==$fcc['id_fcc']){
+              echo '<div class="dualitiesItem"><a href="?id='.$fcc["id_fcc"].'">'.$fcc["name"].'</a></div>';
+            }
+          }
+        }
       }
     }
-
-    echo '<div class="dualitiesList">';
-    foreach($datas as $data){
-      echo '<div class="dualitiesItem"><a href="?id='.$data["id_fcc"].'">'.$data["name"].'</a></div>';
+    echo '<div class="dualitiesItemTitle">Deleted dualities</div>';
+    //orphans
+    foreach($todHasFccs as $thf){
+      foreach($fccs as $fcc){
+        if($thf['id_fcc']==$fcc['id_fcc']){
+          break 2;
+        } 
+        echo '<div class="dualitiesItem"><a href="?id='.$fcc["id_fcc"].'">'.$fcc["name"].'</a></div>';
+      }
     }
     echo '</div>';
-
-    foreach ($datas as $data) {
-      if($data['id_fcc']==$_GET['id']){
-        $name = $data['name'];
-        $id_fcc = $data['id_fcc'];
-        $description = $data['description'];
+    /** 
+     * dualitiesData
+     */
+    if(empty($_GET['id'])){
+      echo '<div class="dualitiesData">';
+      echo 'Select a duality.';
+      echo '</div>';
+      echo '</div>';// closing dualities
+      exit();
+    }
+    foreach ($fccs as $fcc) {
+      if($fcc['id_fcc']==$_GET['id']){
+        $name = $fcc['name'];
+        $id_fcc = $fcc['id_fcc'];
+        $description = $fcc['description'];
         $element = "";
         $antiElement ="";
         $sql = "SELECT symbol, polarity FROM tbl_element WHERE tbl_element.id_fcc='".$id_fcc."';";
         $result = mysqli_query($conn,$sql);
-        $datas2=array();
+        $datas=array();
         $isResult = false;
         if(mysqli_num_rows($result) > 0){
           $isResult = true;
           while($row=mysqli_fetch_assoc($result)){
-            $datas2[] = $row;
+            $datas[] = $row;
           }
         }
-        foreach($datas2 as $data2){
+        foreach($datas as $data2){
           if($data2['polarity']==0){
             $element=$data2["symbol"];
           }else if($data2['polarity']==1){
@@ -49,7 +95,6 @@
           $antiElement='<div class="element bar">'.$element.'</div>';
         }
         $element = '<div class="element">'.$element.'</div>';
-
         echo '<div class="dualitiesData">';
         echo '<h1>'.$name.'</h1>';
         echo '<h2>id</h2>'.$id_fcc;
@@ -62,15 +107,15 @@
         $sql = "SELECT proposition, description FROM tbl_dynamism
         WHERE tbl_dynamism.id_fcc = '".$id_fcc."' AND tbl_dynamism.orientation = '0';";
         $result = mysqli_query($conn,$sql);
-        $datas2=array();
+        $datas=array();
         $isResult = false;
         if(mysqli_num_rows($result) > 0){
           $isResult = true;
           while($row=mysqli_fetch_assoc($result)){
-            $datas2[] = $row;
+            $datas[] = $row;
           }
         }
-        foreach($datas2 as $data2){
+        foreach($datas as $data2){
           $positiveProposition=$data2['proposition'];
           $positiveDescription=$data2['description'];
         }
@@ -92,15 +137,15 @@
         $sql = "SELECT proposition, description FROM tbl_dynamism
         WHERE tbl_dynamism.id_fcc = '".$id_fcc."' AND tbl_dynamism.orientation = '1';";
         $result = mysqli_query($conn,$sql);
-        $datas2=array();
+        $datas=array();
         $isResult = false;
         if(mysqli_num_rows($result) > 0){
           $isResult = true;
           while($row=mysqli_fetch_assoc($result)){
-            $datas2[] = $row;
+            $datas[] = $row;
           }
         }
-        foreach($datas2 as $data2){
+        foreach($datas as $data2){
           $negativeProposition=$data2['proposition'];
           $negativeDescription=$data2['description'];
         }
@@ -122,15 +167,15 @@
         $sql = "SELECT proposition, description FROM tbl_dynamism
         WHERE tbl_dynamism.id_fcc = '".$id_fcc."' AND tbl_dynamism.orientation = '1';";
         $result = mysqli_query($conn,$sql);
-        $datas2=array();
+        $datas=array();
         $isResult = false;
         if(mysqli_num_rows($result) > 0){
           $isResult = true;
           while($row=mysqli_fetch_assoc($result)){
-            $datas2[] = $row;
+            $datas[] = $row;
           }
         }
-        foreach($datas2 as $data2){
+        foreach($datas as $data2){
           $symmetricProposition=$data2['proposition'];
           $symmetricDescription=$data2['description'];
         }
