@@ -22,6 +22,11 @@ include 'includes/header.php';
   $container1sAggregated=array();
   $container1sArrayEncoded;
 
+// zoom tool
+  echo '<div class="zoom">';
+  echo '<input type="button" class="zoomButton" value="+" onclick="zoomIn()">';
+  echo '<input type="button" class="zoomButton" value="-" onclick="zoomOut()">';
+  echo '</div>  ';
 // content
   echo '<div class="tables">';
   if(!isset($option)){

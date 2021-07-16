@@ -59,3 +59,26 @@ function toggleEditMode(showMessage){
   
   
 }
+
+
+function zoomIn(){
+  var transform = $("#tree").css("transform");
+  var scale = "";
+  for (let index = 7; index <= 9; index++) {
+    scale += transform[index];
+  }
+  var parsedScale = parseFloat(scale);
+  var newScale = parsedScale + 0.1;
+  $("#tree").css("transform", "scale("+newScale+")");
+}
+
+function zoomOut(){
+  var transform = $("#tree").css("transform");
+  var scale = "";
+  for (let index = 7; index <= 9; index++) {
+    scale += transform[index];
+  }
+  var parsedScale = parseFloat(scale);
+  var newScale = parsedScale - 0.1;
+  $("#tree").css("transform", "scale("+newScale+")");
+}

@@ -109,7 +109,7 @@ img#logo{
   display:flex;
   flex-direction: column;
   position:fixed;
-  top: 20px;
+  top: 100px;
   left:20px;
   border:2px solid black;
   border-radius:20px;
