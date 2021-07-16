@@ -23,10 +23,12 @@ include 'includes/header.php';
   $container1sArrayEncoded;
 
 // zoom tool
+if(isset($currentTable)){
   echo '<div class="zoom">';
   echo '<input type="button" class="zoomButton" value="+" onclick="zoomIn()">';
   echo '<input type="button" class="zoomButton" value="-" onclick="zoomOut()">';
   echo '</div>  ';
+}
 // content
   echo '<div class="tables">';
   if(!isset($option)){
@@ -204,16 +206,20 @@ include 'includes/header.php';
     echo '</div>'; // canvas
   }
   echo '</div>'; // table
+  
 ?>
 <script>
   var checkBox = document.getElementById("editModeChBx");
-  if(checkBox.checked){
+  var isEditMode = sessionStorage.getItem("editMode");
+  if(isEditMode == "true"){
+    checkBox.checked = true;
     $("#deleteTableBtn").fadeIn(0);
     $("#newTableBtn").fadeIn(0);
     $("#renameTableBtn").fadeIn(0);
     $("#renameTableTxt").fadeIn(0);
     $("#hint").fadeIn(0);
-  } else {
+  } else if (isEditMode = "false"){
+    checkBox.checked = false;
     $("#deleteTableBtn").fadeOut(0);
     $("#newTableBtn").fadeOut(0);
     $("#renameTableBtn").fadeOut(0);

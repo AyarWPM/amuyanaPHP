@@ -4,11 +4,13 @@
   $theHost=1; // 0 = localhost , 1 = amuyana.net
   include_once 'includes/dbh.inc.php';
   include_once 'code.php';
+
 ?>
 
 <html>
 <head>
 <title>Amuya&ntilde;a - Contradictory logic systems</title>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="stylesheet" type="text/css" href="includes/jquery-ui-1.12.1.custom/jquery-ui.css">
 <script src="jquery-3.6.0.js"></script>

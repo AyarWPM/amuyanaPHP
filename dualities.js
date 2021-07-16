@@ -36,21 +36,19 @@ function cancelDelete(){
 }
 
 function toggleEditMode(showMessage){
-  
-  var n = document.getElementById("newTableBtn");
   var checkBox = document.getElementById("editModeChBx");
   if(checkBox.checked){
     if(showMessage == 1){
       alert("With great power comes great responsibility.");
     }
-    isEditMode = true;
+    sessionStorage.setItem("editMode", "true");
     $("#deleteTableBtn").fadeIn();
     $("#newTableBtn").fadeIn();
     $("#hint").fadeIn();
     $("#renameTableBtn").fadeIn();
     $("#renameTableTxt").fadeIn();
   } else {
-    isEditMode = false;
+    sessionStorage.setItem("editMode", "false");
     $("#deleteTableBtn").fadeOut();
     $("#newTableBtn").fadeOut();
     $("#renameTableBtn").fadeOut();
