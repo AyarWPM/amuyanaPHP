@@ -2,7 +2,6 @@
 *{
   margin:0;
   padding: 0;
-  white-space: nowrap;
 }
 body {
   background-color: #000;
@@ -152,13 +151,13 @@ textarea {
   border-radius: 30px;
   padding: 25px;
   height: max-content;
-  width: max-content;
   position: relative;
   left: 50%;
   transform:translate(-50%, 0);
-  margin: 20px 0px;
+  margin:  20px 40px 0 0;
   min-width:300px;
   max-width: 800px;
+  
 }
 .message p {
   padding:3px 1px;
@@ -181,6 +180,7 @@ textarea {
   overflow: auto;
 }
 .tree{
+  white-space: nowrap;
   display: flex;
   align-items: center;
   justify-content: normal;
@@ -392,24 +392,49 @@ margin:0;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  overflow: auto;
 }
-.dualities > *{
-  padding:10px;
-}
-.dualities > .dualitiesData{
-  flex:1 1 70%;
+
+.dualities > * {
+  margin:10px;
   border:1px solid black;
+  background:rgba(255, 255, 255, 0.5);
+  border-radius:10px;
+  padding:10px;  
+}
+.dualitiesList{
+  flex:1 1 200px;
+  max-width:min-content;
+  white-space: nowrap;
+}
+.dualitiesList >*{
+  max-width:min-content;
+}
+.dualitiesData{
+  flex:1 1 50%;
+  white-space: normal;
 }
 .dualitiesData > * {
   padding:5px;
 }
-.dualities > .dualitiesList {
+/* .dualities > .dualitiesList {
   flex:1 1 200px;
   border:1px solid black;
-}
+} */
 .dualitiesItem{
   margin:0;
+  text-indent: 5px;
 }
+.dualitiesItemTitle{
+  font-weight: bold;
+  padding: 5px 0 0 0;
+}
+.dualitiesItemTitle a {
+  /* padding:5px 0 0 0; */
+  /* font-weight: bold; */
+  color:black;
+}
+
 .formulation{
   display: flex;
   padding: 0 5px;
