@@ -47,7 +47,24 @@
       }
     } 
   }
-
+  echo '<option disabled>Deleted dualities</option>';
+  
+  $sql = "SELECT * FROM tbl_fcc WHERE tbl_fcc.id_fcc NOT IN 
+          (SELECT tt.id_fcc FROM tbl_tod_has_fcc AS tt 
+          WHERE tt.id_FCC = tbl_fcc.id_fcc);";
+  $resultFccNotInTod = mysqli_query($conn,$sql);
+  if($resultFccNotInTod){
+    if(mysqli_num_rows($resultFccNotInTod) > 0){
+      while($row=mysqli_fetch_assoc($resultFccNotInTod)){
+          $id = $row['id_fcc'];
+          $name= $row['name'];
+          $description = $row['description'];
+          echo '<option value="'.$id.'">('.$id.') '.$name.'</option>';
+        }
+  }
+  } else {
+    echo "Error mysql.";
+  }
   echo '</select>';
   echo '<input class="selectorAddDualityBtn" type="submit" value="Add">';
   echo '</form>';

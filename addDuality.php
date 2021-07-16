@@ -18,27 +18,39 @@
   $SDD;
 
   if($idFcc>0) {
-    $sql = "SELECT name, description FROM tbl_fcc WHERE tbl_fcc.id_fcc = ".$idFcc.";";
-    $result = mysqli_query($conn,$sql);
-    if($result){
-      if(mysqli_num_rows($result) > 0){
-        while($row=mysqli_fetch_assoc($result)){
-          $fccName= $row['name'];
-          $fccDescription = $row['description'];
+    $sql = "SELECT * FROM tbl_tod_has_fcc 
+          WHERE tbl_tod_has_fcc.id_tod = ".$table." AND tbl_tod_has_fcc.id_fcc = ".$idFcc.";";
+    $resultTodHasFcc = mysqli_query($conn,$sql);
+    if($resultTodHasFcc){
+      if(mysqli_num_rows($resultTodHasFcc) > 0){
+        // if this fcc is in a table, copy it
+        $sql = "SELECT name, description FROM tbl_fcc WHERE tbl_fcc.id_fcc = ".$idFcc.";";
+        $result = mysqli_query($conn,$sql);
+        if($result){
+          if(mysqli_num_rows($result) > 0){
+            while($row=mysqli_fetch_assoc($result)){
+              $fccName= $row['name'];
+              $fccDescription = $row['description'];
+            }
+          }
+        } else {
+          echo "mysql error";
         }
+        // INSERT IN TABLE COPY
+        $sql = "INSERT INTO tbl_fcc (name, description) VALUES ('".$fccName."', '".$fccDescription."');";
+        if(!mysqli_query($conn,$sql)){
+          echo "Fcc NOT created.";
+        } else {
+          $newIdFcc = mysqli_insert_id($conn);
+        }
+        copyAttributes();
+      }else {
+        // if it is not in a table, add it
+        $newIdFcc = $idFcc;
       }
     } else {
       echo "mysql error";
     }
-
-    // INSERT IN TABLE COPY
-    $sql = "INSERT INTO tbl_fcc (name, description) VALUES ('".$fccName."', '".$fccDescription."');";
-    if(!mysqli_query($conn,$sql)){
-      echo "Fcc NOT created.";
-    } else {
-      $newIdFcc = mysqli_insert_id($conn);
-    }
-    copyAttributes();
   } else if($idFcc==0){
     // create attributes
     $fccName = "New Duality ";
@@ -56,8 +68,10 @@
       }
     }
     setNewAttributes();
-  } 
-  insertValues();
+  }
+  if(mysqli_num_rows($resultTodHasFcc) !== 0){
+    insertValues();
+  }
   createContainers();
 
   function copyAttributes(){
@@ -78,7 +92,6 @@
       if(mysqli_num_rows($result) > 0){
         while($row=mysqli_fetch_assoc($result)){
           if($row['polarity']==0) {
-            echo "row ".$row['symbol'];
             $element = $row['symbol'];
           } else if($row['polarity']==1){
             $antiElement = $row['symbol'];

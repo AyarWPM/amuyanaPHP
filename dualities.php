@@ -6,28 +6,41 @@
   $todHasFccs=array();
   $sql = "SELECT * FROM tbl_fcc;";
   $result = mysqli_query($conn,$sql);
-  if(mysqli_num_rows($result) > 0){
-    $isResult = true;
-    while($row=mysqli_fetch_assoc($result)){
-      $fccs[] = $row;
+  if(!$result){
+    echo "mysqlError";
+  } else {
+    if(mysqli_num_rows($result) > 0){
+      $isResult = true;
+      while($row=mysqli_fetch_assoc($result)){
+        $fccs[] = $row;
+      }
     }
   }
 
   $sql = "SELECT * FROM tbl_tod;";
   $result = mysqli_query($conn,$sql);
-  if(mysqli_num_rows($result) > 0){
-    $isResult = true;
-    while($row=mysqli_fetch_assoc($result)){
-      $tods[] = $row;
+  if(!$result){
+    echo "mysqlError";
+  } else {
+    if(mysqli_num_rows($result) > 0){
+      $isResult = true;
+      while($row=mysqli_fetch_assoc($result)){
+        $tods[] = $row;
+      }
     }
   }
+    
 
   $sql = "SELECT * FROM tbl_tod_has_fcc;";
   $result = mysqli_query($conn,$sql);
-  if(mysqli_num_rows($result) > 0){
-    $isResult = true;
-    while($row=mysqli_fetch_assoc($result)){
-      $todHasFccs[] = $row;
+  if(!$result){
+    echo "mysqlError";
+  } else {
+    if(mysqli_num_rows($result) > 0){
+      $isResult = true;
+      while($row=mysqli_fetch_assoc($result)){
+        $todHasFccs[] = $row;
+      }
     }
   }
   
@@ -47,15 +60,20 @@
     }
     echo '<div class="dualitiesItemTitle">Deleted dualities</div>';
     //orphans
-    foreach($todHasFccs as $thf){
-      foreach($fccs as $fcc){
-        if($thf['id_fcc']==$fcc['id_fcc']){
-          break 2;
-        } 
-        echo '<div class="dualitiesItem"><a href="?id='.$fcc["id_fcc"].'">'.$fcc["name"].'</a></div>';
+    $sql = "SELECT * FROM tbl_fcc WHERE tbl_fcc.id_fcc NOT IN 
+          (SELECT tt.id_fcc FROM tbl_tod_has_fcc AS tt 
+          WHERE tt.id_FCC = tbl_fcc.id_fcc);";
+    $resultFccNotInTod = mysqli_query($conn,$sql);
+    if($resultFccNotInTod){
+    if(mysqli_num_rows($resultFccNotInTod) > 0){
+    while($row=mysqli_fetch_assoc($resultFccNotInTod)){
+      echo '<div class="dualitiesItem"><a href="?id='.$row["id_fcc"].'">'.$row["name"].'</a></div>';
       }
     }
-    echo '</div>';
+    } else {
+    echo "Error mysql.";
+    }
+    echo '</div>'; // close dualities list
     /** 
      * dualitiesData
      */
@@ -165,7 +183,7 @@
         $negativeProposition = "";
         $negativeDescription ="";
         $sql = "SELECT proposition, description FROM tbl_dynamism
-        WHERE tbl_dynamism.id_fcc = '".$id_fcc."' AND tbl_dynamism.orientation = '1';";
+        WHERE tbl_dynamism.id_fcc = '".$id_fcc."' AND tbl_dynamism.orientation = '2';";
         $result = mysqli_query($conn,$sql);
         $datas=array();
         $isResult = false;
