@@ -185,9 +185,8 @@ textarea {
   align-items: center;
   justify-content: normal;
   padding: 20px;
-  /* transform: scale(1,0,0,2,0,0); */
   transform: scale(1);
-  transition: "all 0.5s"
+  transition: all 0.5s;
   
 }
 #dualityEditor{

@@ -45,7 +45,7 @@
               echo '<option value="'.$id.'">('.$id.') '.$name.'</option>';
             }
       }
-    } 
+    }
   }
   echo '<option disabled>Deleted dualities</option>';
   

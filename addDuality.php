@@ -18,39 +18,33 @@
   $SDD;
 
   if($idFcc>0) {
-    $sql = "SELECT * FROM tbl_tod_has_fcc 
-          WHERE tbl_tod_has_fcc.id_tod = ".$table." AND tbl_tod_has_fcc.id_fcc = ".$idFcc.";";
-    $resultTodHasFcc = mysqli_query($conn,$sql);
-    if($resultTodHasFcc){
-      if(mysqli_num_rows($resultTodHasFcc) > 0){
-        // if this fcc is in a table, copy it
-        $sql = "SELECT name, description FROM tbl_fcc WHERE tbl_fcc.id_fcc = ".$idFcc.";";
-        $result = mysqli_query($conn,$sql);
-        if($result){
-          if(mysqli_num_rows($result) > 0){
-            while($row=mysqli_fetch_assoc($result)){
-              $fccName= $row['name'];
-              $fccDescription = $row['description'];
-            }
-          }
-        } else {
-          echo "mysql error";
+    // if this fcc is in a table, copy it
+    $sql = "SELECT * FROM tbl_fcc INNER JOIN tbl_tod_has_fcc ON tbl_tod_has_fcc.id_fcc = tbl_fcc.id_fcc
+            WHERE tbl_tod_has_fcc.id_fcc = '".$idFcc."';";
+    $result = mysqli_query($conn,$sql);
+    if($result){
+      if(mysqli_num_rows($result) > 0){
+        // it is in a tod, copy it
+        while($row=mysqli_fetch_assoc($result)){
+          $fccName= $row['name'];
+          $fccDescription = $row['description'];
         }
-        // INSERT IN TABLE COPY
         $sql = "INSERT INTO tbl_fcc (name, description) VALUES ('".$fccName."', '".$fccDescription."');";
         if(!mysqli_query($conn,$sql)){
-          echo "Fcc NOT created.";
         } else {
           $newIdFcc = mysqli_insert_id($conn);
+          copyAttributes();
+          insertValues();
         }
-        copyAttributes();
-      }else {
-        // if it is not in a table, add it
+      } 
+      if (mysqli_num_rows($result) === 0){
+        // it is not in a tod (it is deleted), insert it
         $newIdFcc = $idFcc;
       }
     } else {
-      echo "mysql error";
+      echo "mysql error selecting fcc.";
     }
+
   } else if($idFcc==0){
     // create attributes
     $fccName = "New Duality ";
@@ -68,10 +62,9 @@
       }
     }
     setNewAttributes();
-  }
-  if(mysqli_num_rows($resultTodHasFcc) !== 0){
     insertValues();
   }
+  
   createContainers();
 
   function copyAttributes(){
@@ -304,6 +297,6 @@
     echo "mysql error 2.";
   }
   $url ="tables.php?id=".$table."&option=Open";
-  echo '<script>location.replace("'.$url.'");</script>';
+  //echo '<script>location.replace("'.$url.'");</script>';
   }
 ?>
