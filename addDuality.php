@@ -297,6 +297,6 @@
     echo "mysql error 2.";
   }
   $url ="tables.php?id=".$table."&option=Open";
-  //echo '<script>location.replace("'.$url.'");</script>';
+  echo '<script>location.replace("'.$url.'");</script>';
   }
 ?>
